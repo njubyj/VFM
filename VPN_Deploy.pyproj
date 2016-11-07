@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>f9770f26-1432-49a0-9976-d14c7c637cf5</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <StartupFile>Deploy\vpn_conf.py</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <Name>VPN_Deploy</Name>
+    <RootNamespace>VPN_Deploy</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <PtvsTargetsFile>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Deploy\" />
+    <Folder Include="Resource\" />
+    <Folder Include="server\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Deploy\vpn_conf.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Deploy\vpn_server.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Deploy\vpn_file.py" />
+    <Compile Include="server\vpn_global_var.py" />
+    <Compile Include="server\vpn_logger.py" />
+    <Compile Include="server\vpn_new.py" />
+    <Compile Include="server\vpn_server.py" />
+    <Compile Include="server\vpn_start.py" />
+    <Compile Include="Deploy\vpn_test.py" />
+    <Compile Include="server\vpn_xml.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resource\openvpn.xml" />
+    <Content Include="Resource\refrence.txt" />
+    <Content Include="Resource\server.conf" />
+    <Content Include="Resource\server1.conf" />
+    <Content Include="Resource\server2.conf" />
+    <Content Include="Resource\vpn_logging.conf" />
+  </ItemGroup>
+  <Import Condition="Exists($(PtvsTargetsFile))" Project="$(PtvsTargetsFile)" />
+  <Import Condition="!Exists($(PtvsTargetsFile))" Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
+  <!-- Uncomment the CoreCompile target to enable the Build command in
+       Visual Studio and specify your pre- and post-build commands in
+       the BeforeBuild and AfterBuild targets below. -->
+  <!--<Target Name="CoreCompile" />-->
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+</Project>
