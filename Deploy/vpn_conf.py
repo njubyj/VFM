@@ -28,8 +28,8 @@ class VpnConf(VpnFile):
     _TAG_LOG = "log"
     _TAG_MARK = " ..."
 
-    # self._re_dic: string
-    # self._val_dic: string 
+    # self._re_dic: regular dictionary
+    # self._val_dic: value dictionary
     
     
     def __init__(self, path):

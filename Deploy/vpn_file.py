@@ -11,6 +11,8 @@ class VpnFile(object):
     File Operation
     """
 
+    # self._path: string 
+
     _file_sys = platform.system()
 
     def __init__(self, path):
