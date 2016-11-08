@@ -13,7 +13,7 @@
 
   <easy-rsa>/usr/apps/OpenVPN/easy-rsa/2.0/</easy-rsa>
 
-  <z_test_tenant id="1" n="test_tenant" path="/usr/apps/OpenVPN/z_test_tenant/">
+  <user id="1" n="test_tenant" path="/usr/apps/OpenVPN/z_test_tenant/">
     <server id="1" path="server1.conf">
       <port>1779</port>
       <proto>udp</proto>
@@ -41,6 +41,6 @@
       </logmsg>
     </server>
 
-  </z_test_tenant>
+  </user>
 
 </openvpn>

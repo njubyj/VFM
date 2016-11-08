@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>f9770f26-1432-49a0-9976-d14c7c637cf5</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Deploy\vpn_conf.py</StartupFile>
+    <StartupFile>Deploy\vpn_server.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -28,31 +28,23 @@
   <ItemGroup>
     <Folder Include="Deploy\" />
     <Folder Include="Resource\" />
-    <Folder Include="server\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Deploy\vpn_conf.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Deploy\vpn_logger.py" />
     <Compile Include="Deploy\vpn_server.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Deploy\vpn_file.py" />
-    <Compile Include="server\vpn_global_var.py" />
-    <Compile Include="server\vpn_logger.py" />
-    <Compile Include="server\vpn_new.py" />
-    <Compile Include="server\vpn_server.py" />
-    <Compile Include="server\vpn_start.py" />
-    <Compile Include="Deploy\vpn_test.py" />
-    <Compile Include="server\vpn_xml.py" />
+    <Compile Include="Deploy\__init__.py" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resource\openvpn.xml" />
-    <Content Include="Resource\refrence.txt" />
     <Content Include="Resource\server.conf" />
     <Content Include="Resource\server1.conf" />
     <Content Include="Resource\server2.conf" />
-    <Content Include="Resource\vpn_logging.conf" />
   </ItemGroup>
   <Import Condition="Exists($(PtvsTargetsFile))" Project="$(PtvsTargetsFile)" />
   <Import Condition="!Exists($(PtvsTargetsFile))" Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
