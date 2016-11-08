@@ -1,0 +1,46 @@
+<openvpn>
+
+  <cloud>112.124.0.254</cloud>
+  <tenantnum>1</tenantnum>
+  <servernum>1</servernum>
+  
+  
+  <tapidx></tapidx>
+  <addridx></addridx>
+  <portidx></portidx>
+  <usridx>2</usridx>
+  <serveridx>2</serveridx>
+
+  <easy-rsa>/usr/apps/OpenVPN/easy-rsa/2.0/</easy-rsa>
+
+  <z_test_tenant id="1" n="test_tenant" path="/usr/apps/OpenVPN/z_test_tenant/">
+    <server id="1" path="server1.conf">
+      <port>1779</port>
+      <proto>udp</proto>
+      <dev>tap3</dev>
+      <ips>10.9.3.0</ips>
+      <alive>10 120</alive>
+      <max></max>
+      <ctoc>1</ctoc>
+      <keydir>keys</keydir>
+      <ftpinfo>ftp001,ftp123456</ftpinfo>
+
+      <keysconf path="/usr/apps/OpenVPN/z_test_tenant/config/">
+        <ca>ca.crt</ca>
+        <dh>dh1024.pem</dh>
+        <tls>ta.key</tls>
+        <cert>test_tenant.crt</cert>
+        <key>test_tenant.key</key>
+      </keysconf>
+
+      <logmsg path="/usr/apps/OpenVPN/z_test_tenant/log/">
+        <ippool>ipp.txt</ippool>
+        <log>openvpn.log</log>
+        <status>openvpn-status.log</status>
+        <pid>test_tenant1</pid>
+      </logmsg>
+    </server>
+
+  </z_test_tenant>
+
+</openvpn>
