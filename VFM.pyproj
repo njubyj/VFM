@@ -4,13 +4,14 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>f9770f26-1432-49a0-9976-d14c7c637cf5</ProjectGuid>
-    <ProjectHome>.</ProjectHome>
+    <ProjectHome>
+    </ProjectHome>
     <StartupFile>Deploy\vpn_server.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>VPN_Deploy</Name>
+    <Name>VFM</Name>
     <RootNamespace>VPN_Deploy</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -30,6 +31,9 @@
     <Folder Include="Resource\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Deploy\openvpn_server.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Deploy\vpn_conf.py">
       <SubType>Code</SubType>
     </Compile>

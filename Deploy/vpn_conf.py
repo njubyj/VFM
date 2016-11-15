@@ -11,21 +11,21 @@ class VpnConf(VpnFile):
     """
 
     # self const vars
-    _TAG_PORT = "port"
-    _TAG_PROTO = "proto"
-    _TAG_DEV = "dev"
-    _TAG_CA = "ca"
-    _TAG_CERT = "cert"
-    _TAG_KEY = "key"
-    _TAG_DH = "dh"
-    _TAG_SERVER = "server"
-    _TAG_IPPOOL = "ifconfig-pool-persist"
-    _TAG_C2C = "client-to-client"
-    _TAG_KALIVE = "keepalive"
-    _TAG_TLS = "tls-auth"
-    _TAG_MAXC = "max-clients"
-    _TAG_STAUS = "status"
-    _TAG_LOG = "log"
+    TAG_PORT = "port"
+    TAG_PROTO = "proto"
+    TAG_DEV = "dev"
+    TAG_CA = "ca"
+    TAG_CERT = "cert"
+    TAG_KEY = "key"
+    TAG_DH = "dh"
+    TAG_SERVER = "server"
+    TAG_IPPOOL = "ifconfig-pool-persist"
+    TAG_C2C = "client-to-client"
+    TAG_KALIVE = "keepalive"
+    TAG_TLS = "tls-auth"
+    TAG_MAXC = "max-clients"
+    TAG_STAUS = "status"
+    TAG_LOG = "log"
     _TAG_MARK = " ..."
 
     # self._re_dic: regular dictionary
@@ -36,37 +36,37 @@ class VpnConf(VpnFile):
         super(VpnConf, self).__init__(path)
 
         self._re_dic = {\
-            self._TAG_PORT:r"(^port [\S|\s]*?$)", \
-            self._TAG_PROTO:r"(^proto [\S|\s]*?$)", \
-            self._TAG_DEV:r"(^dev [\S|\s]*?$)", \
-            self._TAG_CA:r"(^ca [\S|\s]*?$)", \
-            self._TAG_CERT:r"(^cert [\S|\s]*?$)", \
-            self._TAG_KEY:r"(^key [\S|\s]*?$)", \
-            self._TAG_DH:r"(^dh [\S|\s]*?$)", \
-            self._TAG_SERVER:r"(^server [\S|\s]*?$)", \
-            self._TAG_IPPOOL:r"(^[#;]*ifconfig\-pool\-persist[\S|\s]*?$)", \
-            self._TAG_C2C:r"(^[#;]*client\-to\-client[\S|\s]*?$)", \
-            self._TAG_KALIVE:r"(^keepalive [\S|\s]*?$)", \
-            self._TAG_TLS:r"(^tls\-auth [\S|\s]*?$)", \
-            self._TAG_MAXC:r"(^[#;]*max\-clients [\S|\s]*?$)", \
-            self._TAG_STAUS:r"(^[#;]*status[\S|\s]*?$)", \
-            self._TAG_LOG:r"(^[#;]*log[\S|\s]*?$)"}
+            self.TAG_PORT:r"(^port [\S|\s]*?$)", \
+            self.TAG_PROTO:r"(^proto [\S|\s]*?$)", \
+            self.TAG_DEV:r"(^dev [\S|\s]*?$)", \
+            self.TAG_CA:r"(^ca [\S|\s]*?$)", \
+            self.TAG_CERT:r"(^cert [\S|\s]*?$)", \
+            self.TAG_KEY:r"(^key [\S|\s]*?$)", \
+            self.TAG_DH:r"(^dh [\S|\s]*?$)", \
+            self.TAG_SERVER:r"(^server [\S|\s]*?$)", \
+            self.TAG_IPPOOL:r"(^[#;]*ifconfig\-pool\-persist[\S|\s]*?$)", \
+            self.TAG_C2C:r"(^[#;]*client\-to\-client[\S|\s]*?$)", \
+            self.TAG_KALIVE:r"(^keepalive [\S|\s]*?$)", \
+            self.TAG_TLS:r"(^tls\-auth [\S|\s]*?$)", \
+            self.TAG_MAXC:r"(^[#;]*max\-clients [\S|\s]*?$)", \
+            self.TAG_STAUS:r"(^[#;]*status[\S|\s]*?$)", \
+            self.TAG_LOG:r"(^[#;]*log[\S|\s]*?$)"}
         self._val_dic = {\
-            self._TAG_PORT:"", \
-            self._TAG_PROTO:"", \
-            self._TAG_DEV:"", \
-            self._TAG_CA:"", \
-            self._TAG_CERT:"", \
-            self._TAG_KEY:"", \
-            self._TAG_DH:"", \
-            self._TAG_SERVER:"", \
-            self._TAG_IPPOOL:"", \
-            self._TAG_C2C:"", \
-            self._TAG_KALIVE:"", \
-            self._TAG_TLS:"", \
-            self._TAG_MAXC:"", \
-            self._TAG_STAUS:"", \
-            self._TAG_LOG:""}
+            self.TAG_PORT:"", \
+            self.TAG_PROTO:"", \
+            self.TAG_DEV:"", \
+            self.TAG_CA:"", \
+            self.TAG_CERT:"", \
+            self.TAG_KEY:"", \
+            self.TAG_DH:"", \
+            self.TAG_SERVER:"", \
+            self.TAG_IPPOOL:"", \
+            self.TAG_C2C:"", \
+            self.TAG_KALIVE:"", \
+            self.TAG_TLS:"", \
+            self.TAG_MAXC:"", \
+            self.TAG_STAUS:"", \
+            self.TAG_LOG:""}
 
     def _var_clear(self):
         for key in self._val_dic:
@@ -115,19 +115,19 @@ class VpnConf(VpnFile):
         """
         self.set_port_var(port)
 
-        self.vpn_line_update_re(self._re_dic[self._TAG_PORT], port)
+        self.vpn_line_update_re(self._re_dic[self.TAG_PORT], port)
 
     def set_port_var(self, port):
         """
         Set the port variable
         """
-        self._val_dic[self._TAG_PORT] = port
+        self._val_dic[self.TAG_PORT] = port
 
     def get_port(self):
         """
         Get the port number
         """
-        return self._val_dic[self._TAG_PORT]
+        return self._val_dic[self.TAG_PORT]
 
     def set_proto(self, proto):
         """
@@ -135,19 +135,19 @@ class VpnConf(VpnFile):
         """
         self.set_proto_var(proto)
 
-        self.vpn_line_update_re(self._re_dic[self._TAG_PROTO], proto)
+        self.vpn_line_update_re(self._re_dic[self.TAG_PROTO], proto)
 
     def set_proto_var(self, proto):
         """
         Set the protocal variable
         """
-        self._val_dic[self._TAG_PROTO] = proto
+        self._val_dic[self.TAG_PROTO] = proto
 
     def get_proto(self):
         """
         Get the protocal type
         """
-        return self._val_dic[self._TAG_PROTO]
+        return self._val_dic[self.TAG_PROTO]
     
     def set_dev(self, dev):
         """
@@ -155,19 +155,19 @@ class VpnConf(VpnFile):
         """
         self.set_dev_var(dev)
 
-        self.vpn_line_update_re(self._re_dic[self._TAG_DEV], dev)
+        self.vpn_line_update_re(self._re_dic[self.TAG_DEV], dev)
 
     def set_dev_var(self, dev):
         """
         Set the device variable
         """
-        self._val_dic[self._TAG_DEV] = dev
+        self._val_dic[self.TAG_DEV] = dev
 
     def get_dev(self):
         """
         Get the device 
         """
-        return self._val_dic[self._TAG_DEV]
+        return self._val_dic[self.TAG_DEV]
 
     def set_ca(self, ca):
         """
@@ -175,19 +175,19 @@ class VpnConf(VpnFile):
         """
         self.set_ca_var(ca)
 
-        self.vpn_line_update_re(self._re_dic[self._TAG_CA], ca)
+        self.vpn_line_update_re(self._re_dic[self.TAG_CA], ca)
 
     def set_ca_var(self, ca):
         """
         Set the ca certificate variable
         """
-        self._val_dic[self._TAG_CA] = ca
+        self._val_dic[self.TAG_CA] = ca
 
     def get_ca(self):
         """
         Get the ca certificate 
         """
-        return self._val_dic[self._TAG_CA]
+        return self._val_dic[self.TAG_CA]
 
     def set_cert(self, cert):
         """
@@ -195,19 +195,19 @@ class VpnConf(VpnFile):
         """
         self.set_cert_var(cert)
 
-        self.vpn_line_update_re(self._re_dic[self._TAG_CERT], cert)
+        self.vpn_line_update_re(self._re_dic[self.TAG_CERT], cert)
 
     def set_cert_var(self, cert):
         """
         Set the server certificertte variable
         """
-        self._val_dic[self._TAG_CERT] = cert
+        self._val_dic[self.TAG_CERT] = cert
 
     def get_cert(self):
         """
         Get the server certificertte 
         """
-        return self._val_dic[self._TAG_CERT]
+        return self._val_dic[self.TAG_CERT]
 
     def set_key(self, key):
         """
@@ -215,19 +215,19 @@ class VpnConf(VpnFile):
         """
         self.set_key_var(key)
 
-        self.vpn_line_update_re(self._re_dic[self._TAG_KEY], key)
+        self.vpn_line_update_re(self._re_dic[self.TAG_KEY], key)
 
     def set_key_var(self, key):
         """
         Set the server key variable
         """
-        self._val_dic[self._TAG_KEY] = key
+        self._val_dic[self.TAG_KEY] = key
 
     def get_key(self):
         """
         Get the server key 
         """
-        return self._val_dic[self._TAG_KEY]
+        return self._val_dic[self.TAG_KEY]
 
     def set_dh(self, dh):
         """
@@ -235,19 +235,19 @@ class VpnConf(VpnFile):
         """
         self.set_dh_var(dh)
 
-        self.vpn_line_update_re(self._re_dic[self._TAG_DH], dh)
+        self.vpn_line_update_re(self._re_dic[self.TAG_DH], dh)
 
     def set_dh_var(self, dh):
         """
         Set the server dh variable
         """
-        self._val_dic[self._TAG_DH] = dh
+        self._val_dic[self.TAG_DH] = dh
 
     def get_dh(self):
         """
         Get the server dh 
         """
-        return self._val_dic[self._TAG_DH]
+        return self._val_dic[self.TAG_DH]
 
     def set_server(self, server):
         """
@@ -255,19 +255,19 @@ class VpnConf(VpnFile):
         """
         self.set_server_var(server)
 
-        self.vpn_line_update_re(self._re_dic[self._TAG_SERVER], server)
+        self.vpn_line_update_re(self._re_dic[self.TAG_SERVER], server)
 
     def set_server_var(self, server):
         """
         Set the vpn ip range variable
         """
-        self._val_dic[self._TAG_SERVER] = server
+        self._val_dic[self.TAG_SERVER] = server
 
     def get_server(self):
         """
         Get the vpn ip range
         """
-        return self._val_dic[self._TAG_SERVER]
+        return self._val_dic[self.TAG_SERVER]
 
     def set_ippool(self, ippool):
         """
@@ -275,19 +275,19 @@ class VpnConf(VpnFile):
         """
         self.set_ippool_var(ippool)
 
-        self.vpn_line_update_re(self._re_dic[self._TAG_IPPOOL], ippool)
+        self.vpn_line_update_re(self._re_dic[self.TAG_IPPOOL], ippool)
 
     def set_ippool_var(self, ippool):
         """
         Set the ifconfig-pool-persist variable
         """
-        self._val_dic[self._TAG_IPPOOL] = ippool
+        self._val_dic[self.TAG_IPPOOL] = ippool
 
     def get_ippool(self):
         """
         Get the ifconfig-pool-persist
         """
-        return self._val_dic[self._TAG_IPPOOL]
+        return self._val_dic[self.TAG_IPPOOL]
 
     def set_c2c(self, c2c):
         """
@@ -295,19 +295,19 @@ class VpnConf(VpnFile):
         """
         self.set_c2c_var(c2c)
 
-        self.vpn_line_update_re(self._re_dic[self._TAG_C2C], c2c)
+        self.vpn_line_update_re(self._re_dic[self.TAG_C2C], c2c)
 
     def set_c2c_var(self, c2c):
         """
         Set the client-to-client variable
         """
-        self._val_dic[self._TAG_C2C] = c2c
+        self._val_dic[self.TAG_C2C] = c2c
 
     def get_c2c(self):
         """
         Get the client-to-client
         """
-        return self._val_dic[self._TAG_C2C]
+        return self._val_dic[self.TAG_C2C]
 
     def set_kalive(self, kalive):
         """
@@ -315,19 +315,19 @@ class VpnConf(VpnFile):
         """
         self.set_kalive_var(kalive)
 
-        self.vpn_line_update_re(self._re_dic[self._TAG_KALIVE], kalive)
+        self.vpn_line_update_re(self._re_dic[self.TAG_KALIVE], kalive)
 
     def set_kalive_var(self, kalive):
         """
         Set the keepalive variable
         """
-        self._val_dic[self._TAG_KALIVE] = kalive
+        self._val_dic[self.TAG_KALIVE] = kalive
 
     def get_kalive(self):
         """
         Get the keepalive
         """
-        return self._val_dic[self._TAG_KALIVE]
+        return self._val_dic[self.TAG_KALIVE]
 
     def set_tls(self, tls):
         """
@@ -335,19 +335,19 @@ class VpnConf(VpnFile):
         """
         self.set_tls_var(tls)
 
-        self.vpn_line_update_re(self._re_dic[self._TAG_TLS], tls)
+        self.vpn_line_update_re(self._re_dic[self.TAG_TLS], tls)
 
     def set_tls_var(self, tls):
         """
         Set the tls-auth variable
         """
-        self._val_dic[self._TAG_TLS] = tls
+        self._val_dic[self.TAG_TLS] = tls
 
     def get_tls(self):
         """
         Get the tls-auth
         """
-        return self._val_dic[self._TAG_TLS]
+        return self._val_dic[self.TAG_TLS]
     
     def set_maxc(self, maxc):
         """
@@ -355,19 +355,19 @@ class VpnConf(VpnFile):
         """
         self.set_maxc_var(maxc)
 
-        self.vpn_line_update_re(self._re_dic[self._TAG_MAXC], maxc)
+        self.vpn_line_update_re(self._re_dic[self.TAG_MAXC], maxc)
 
     def set_maxc_var(self, maxc):
         """
         Set the max-clients variable
         """
-        self._val_dic[self._TAG_MAXC] = maxc
+        self._val_dic[self.TAG_MAXC] = maxc
 
     def get_maxc(self):
         """
         Get the max-clients
         """
-        return self._val_dic[self._TAG_MAXC]
+        return self._val_dic[self.TAG_MAXC]
 
     def set_status(self, status):
         """
@@ -395,19 +395,19 @@ class VpnConf(VpnFile):
         """
         self.set_log_var(log)
 
-        self.vpn_line_update_re(self._re_dic[self._TAG_LOG], log)
+        self.vpn_line_update_re(self._re_dic[self.TAG_LOG], log)
 
     def set_log_var(self, log):
         """
         Set the log variable
         """
-        self._val_dic[self._TAG_LOG] = log
+        self._val_dic[self.TAG_LOG] = log
 
     def get_log(self):
         """
         Get the log
         """
-        return self._val_dic[self._TAG_LOG]
+        return self._val_dic[self.TAG_LOG]
 
 
 if __name__ == "__main__":
