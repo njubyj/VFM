@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "VPN_Deploy", "VPN_Deploy.pyproj", "{F9770F26-1432-49A0-9976-D14C7C637CF5}"
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "VFM", "VFM.pyproj", "{F9770F26-1432-49A0-9976-D14C7C637CF5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

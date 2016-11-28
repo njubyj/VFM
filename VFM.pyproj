@@ -13,6 +13,9 @@
     <OutputPath>.</OutputPath>
     <Name>VFM</Name>
     <RootNamespace>VPN_Deploy</RootNamespace>
+    <IsWindowsApplication>False</IsWindowsApplication>
+    <InterpreterId>{9a7a9026-48c1-4688-9d5d-e5699d47d074}</InterpreterId>
+    <InterpreterVersion>2.7</InterpreterVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,10 +34,10 @@
     <Folder Include="Resource\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Deploy\openvpn_server.py">
+    <Compile Include="Deploy\vpn_conf.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Deploy\vpn_conf.py">
+    <Compile Include="Deploy\vpn_base.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Deploy\vpn_logger.py" />
@@ -49,6 +52,10 @@
     <Content Include="Resource\server.conf" />
     <Content Include="Resource\server1.conf" />
     <Content Include="Resource\server2.conf" />
+    <Content Include="Resource\vpn_logging.conf" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterpreterReference Include="{9a7a9026-48c1-4688-9d5d-e5699d47d074}\2.7" />
   </ItemGroup>
   <Import Condition="Exists($(PtvsTargetsFile))" Project="$(PtvsTargetsFile)" />
   <Import Condition="!Exists($(PtvsTargetsFile))" Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />

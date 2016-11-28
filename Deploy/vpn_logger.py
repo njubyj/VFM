@@ -34,20 +34,20 @@ class VpnLog:
     def write_critical(self, info):
         self.logger.critical(info)
 
-    def write_ex(self, info, ex = "=====", flag = self.LOG_I):
+    def write_ex(self, info, ex = "=====", flag = 'I'):
         lg = ex + info + ex
 
-        if flag == LOG_D:
-            write_debug(lg)
+        if flag == self.LOG_D:
+            self.write_debug(lg)
 
-        if flag == LOG_I:
-            write_info(lg)
+        if flag == self.LOG_I:
+            self.write_info(lg)
         
-        if flag == LOG_W:
-            write_warn(lg)
+        if flag == self.LOG_W:
+            self.write_warn(lg)
         
-        if flag == LOG_E:
-            write_error(lg)
+        if flag == self.LOG_E:
+            self.write_error(lg)
         
-        if flag == LOG_C:
-            write_critical(lg)
+        if flag == self.LOG_C:
+            self.write_critical(lg)

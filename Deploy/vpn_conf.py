@@ -24,7 +24,7 @@ class VpnConf(VpnFile):
     TAG_KALIVE = "keepalive"
     TAG_TLS = "tls-auth"
     TAG_MAXC = "max-clients"
-    TAG_STAUS = "status"
+    TAG_STATUS = "status"
     TAG_LOG = "log"
     _TAG_MARK = " ..."
 
@@ -49,7 +49,7 @@ class VpnConf(VpnFile):
             self.TAG_KALIVE:r"(^keepalive [\S|\s]*?$)", \
             self.TAG_TLS:r"(^tls\-auth [\S|\s]*?$)", \
             self.TAG_MAXC:r"(^[#;]*max\-clients [\S|\s]*?$)", \
-            self.TAG_STAUS:r"(^[#;]*status[\S|\s]*?$)", \
+            self.TAG_STATUS:r"(^[#;]*status[\S|\s]*?$)", \
             self.TAG_LOG:r"(^[#;]*log[\S|\s]*?$)"}
         self._val_dic = {\
             self.TAG_PORT:"", \
@@ -65,7 +65,7 @@ class VpnConf(VpnFile):
             self.TAG_KALIVE:"", \
             self.TAG_TLS:"", \
             self.TAG_MAXC:"", \
-            self.TAG_STAUS:"", \
+            self.TAG_STATUS:"", \
             self.TAG_LOG:""}
 
     def _var_clear(self):
@@ -375,19 +375,19 @@ class VpnConf(VpnFile):
         """
         self.set_status_var(status)
 
-        self.vpn_line_update_re(self._re_dic[self._TAG_STATUS], status)
+        self.vpn_line_update_re(self._re_dic[self.TAG_STATUS], status)
 
     def set_status_var(self, status):
         """
         Set the status log variable
         """
-        self._val_dic[self._TAG_STATUS] = status
+        self._val_dic[self.TAG_STATUS] = status
 
     def get_status(self):
         """
         Get the status log
         """
-        return self._val_dic[self._TAG_STATUS]
+        return self._val_dic[self.TAG_STATUS]
 
     def set_log(self, log):
         """
@@ -413,10 +413,14 @@ class VpnConf(VpnFile):
 if __name__ == "__main__":
     
     vpn_conf = VpnConf("./Resource/server2.conf");
-    print vpn_conf.get_conf_options()
-    vpn_conf.set_port("port 1776")
-    vpn_conf.set_c2c("#client-to-client")
-    vpn_conf.conf_flush()
+    #print vpn_conf.get_conf_options()
+    #vpn_conf.set_port("port 1776")
+    #vpn_conf.set_c2c("#client-to-client")
+    #vpn_conf.set_status(r"status E:\\vpn\\log\\status.log")
+    #vpn_conf.conf_flush()
+    str = "log >>>"
+    print re.sub("^log", "log E:\\\\vpn", str, 1, re.M)
+    print re.sub("^log", "log E:\npn", str, 1, re.M)
     print vpn_conf.is_exist()
 
 
