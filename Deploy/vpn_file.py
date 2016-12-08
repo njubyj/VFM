@@ -65,7 +65,7 @@ class VpnFile(object):
         @new: new content
         """
 
-        line = __get_line_idxL(old)
+        line = self.__get_line_idxL(old)
 
         if not line:
             return False
@@ -138,14 +138,10 @@ class VpnFile(object):
         tar_file = open(self._path, 'r')
         tar_old = tar_file.read()
         tar_file.close()
-
-       
+                  
         tar_new = re.sub(old, new, tar_old, count, flags = re.M)
         #if tar_new == tar_old:
         #    return False
         tar_file = open(self._path, 'w')
         tar_file.write(tar_new)
         tar_file.close()
-
-    
-

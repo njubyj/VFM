@@ -1,0 +1,16 @@
+<vfm>
+  
+  <cloud>112.124.0.254</cloud>
+
+  <tapidx>0</tapidx>
+  <addridx>10.10.0.0</addridx>
+  <portidx>2000</portidx>
+  <usridx>2</usridx>
+
+  <vpn_dir>/usr/apps/OpenVPN</vpn_dir>
+  <easy-rsa>/usr/apps/OpenVPN/easy-rsa/2.0</easy-rsa>
+  <guide>.\Test\TestXML\guide.conf</guide>
+  <logger>/opt/VFM/config/vpn_logging.conf</logger>
+  <dataxml>/usr/apps/OpenVPN/db/openvpn.xml</dataxml>
+  
+</vfm>

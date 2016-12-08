@@ -6,7 +6,7 @@
     <ProjectGuid>f9770f26-1432-49a0-9976-d14c7c637cf5</ProjectGuid>
     <ProjectHome>
     </ProjectHome>
-    <StartupFile>Deploy\vpn_server.py</StartupFile>
+    <StartupFile>Test\TestXML\xml_test.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -31,7 +31,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Deploy\" />
+    <Folder Include="Test\" />
     <Folder Include="Resource\" />
+    <Folder Include="Test\TestArgs\" />
+    <Folder Include="Test\TestGuide\" />
+    <Folder Include="Test\TestXML\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Deploy\vpn_conf.py">
@@ -40,19 +44,68 @@
     <Compile Include="Deploy\vpn_base.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Deploy\vpn_global_var.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Deploy\vpn_guide.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Deploy\vpn_logger.py" />
+    <Compile Include="Deploy\vpn_main.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Deploy\vpn_server.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Deploy\vpn_file.py" />
+    <Compile Include="Deploy\vpn_tag.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Deploy\vpn_xml.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Deploy\__init__.py" />
+    <Compile Include="Test\TestArgs\args_test.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\TestArgs\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\TestGuide\guide_test.py" />
+    <Compile Include="Test\TestGuide\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\TestXML\__init__.py" />
+    <Compile Include="Test\test_vars.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\TestXML\xml_test.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Test\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resource\config.xml">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="Resource\openvpn.xml" />
     <Content Include="Resource\server.conf" />
-    <Content Include="Resource\server1.conf" />
+    <Content Include="Resource\serverEx.conf" />
     <Content Include="Resource\server2.conf" />
+    <Content Include="Resource\VPN.conf">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="Resource\vpn_logging.conf" />
+    <Content Include="test.txt" />
+    <Content Include="Test\TestGuide\guide_none.conf" />
+    <Content Include="Test\TestGuide\guide_normal.conf" />
+    <Content Include="Test\TestXML\vpnconf.xml" />
+    <Content Include="Test\TestXML\add_del.xml" />
+    <Content Include="Test\TestXML\vpnxml.xml" />
+    <Content Include="Test\test.xml" />
+    <Content Include="Tips.log" />
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="{9a7a9026-48c1-4688-9d5d-e5699d47d074}\2.7" />

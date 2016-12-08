@@ -2,7 +2,8 @@
 # -*- coding: UTF-8 -*-
 __author__ = 'yjbao'
 
-import os,sys
+import os
+import time
 import platform
 import shutil
 from vpn_conf import VpnConf
@@ -36,7 +37,7 @@ class VpnServer(VpnBase):
         self.__key_dir = self.__dir_path + "/keys/"
         self.__log_dir = self.__dir_path + "/log/"
         self.__conf_list = []
-        self.__vpn_log = VpnLog(log)
+        self.__vpn_log = VpnLog(log, "server")
 
         if self.__sys == "Windows":
             self.__dir_path = self.__dir_path.replace('/', '\\\\')
@@ -257,10 +258,10 @@ class VpnServer(VpnBase):
         Create a directory by self
         @rsa: easy-rsa shell path
         """
-        if os.path.exists(self.__dir_path):
-            log_str = "The '" + self.__name + "' directory is existed."
-            self.__vpn_log.write_ex(log_str)
-            return False
+        #if os.path.exists(self.__dir_path):
+        #    log_str = "The '" + self.__name + "' directory is existed."
+        #    self.__vpn_log.write_ex(log_str)
+        #    return False
 
         self.__create_dir(rsa)
         log_str = "Create '" + self.__name + "' directory successfully."
@@ -269,6 +270,7 @@ class VpnServer(VpnBase):
         self.__create_keys()
         self.__copy_keys()
         log_str = "Create '" + self._name + "' keys successfully."
+        self.__vpn_log.write_ex(log_str)
 
         return True
 
@@ -293,6 +295,12 @@ class VpnServer(VpnBase):
         vpn_cf.conf_flush()
 
         self.__conf_list.append(vpn_cf)
+
+    def get_usr_dir(self):
+        """
+        Get the user directory 
+        """
+        return self.__dir_path
 
     def get_config_list(self):
         """
@@ -319,6 +327,7 @@ class VpnServer(VpnBase):
                 self.vpn_shell(self.__vpn, param_dic)
 
             else:
+                time.sleep(1)
                 pass
 
     def vpn_add_client(self, param = "--batch", name = "client"):

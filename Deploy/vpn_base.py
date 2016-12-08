@@ -3,7 +3,6 @@
 __author__ = 'yjbao'
 
 import os
-import platform
 
 class VpnBase(object):
     """

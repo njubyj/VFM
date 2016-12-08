@@ -1,8 +1,17 @@
 <openvpn>
 
-  <tenantcnt>2</tenantcnt>
+  <cloud>112.124.0.254</cloud>
+  <tenantcnt>1</tenantcnt>
   <servercnt>1</servercnt>
-  
+
+  <tapidx>0</tapidx>
+  <addridx>10.10.0.0</addridx>
+  <portidx>2000</portidx>
+  <usridx>2</usridx>
+
+  <easy-rsa>/usr/apps/OpenVPN/easy-rsa/2.0</easy-rsa>
+  <guide>.\Test\TestXML\guide.conf</guide>
+
   <user id="1" n="test_tenant" dir="/usr/apps/OpenVPN/z_test_tenant">
 
     <serveridx>2</serveridx>
@@ -10,7 +19,7 @@
     <keys_dir>/usr/apps/OpenVPN/z_test_tenant/keys</keys_dir>
     <config_dir>/usr/apps/OpenVPN/z_test_tenant/config</config_dir>
     <log_dir>/usr/apps/OpenVPN/z_test_tenant/log</log_dir>
-    
+
     <server id="1" n="server1">
       <port>1779</port>
       <proto>udp</proto>
@@ -37,16 +46,6 @@
         <pid>test_tenant1</pid>
       </logmsg>
     </server>
-
-  </user>
-
-  <user id="2" n="test_byj" dir="/usr/apps/OpenVPN/z_test_byj">
-
-    <serveridx>1</serveridx>
-    <scnt>0</scnt>
-    <keys_dir>/usr/apps/OpenVPN/z_test_tenant/keys</keys_dir>
-    <config_dir>/usr/apps/OpenVPN/z_test_tenant/config</config_dir>
-    <log_dir>/usr/apps/OpenVPN/z_test_tenant/log</log_dir>
 
   </user>
 
