@@ -36,6 +36,7 @@ class VpnDeploy(object):
         self.__rsa = ""
         self.__guide_path = ""
         self.__log_conf = ""
+        self.__template = ""
         self.__dxml_path = ""
         self.__usr_dic = {}
         self.__CONF_SUF = VTAG.VPN_CONF
@@ -109,24 +110,48 @@ class VpnDeploy(object):
                     idx.text = str(int(idx.text) + 1)
                     self.__confxml.write(self.__xml_path, encoding = "utf-8")
                 else:
-            
+                    ## ...
                     pass
 
         return True
 
     def __add_server_default(self, usr):
-            pass
-            #if self.__xml.is_usr_existed(usr):
-                
-            #else:
-            #    flag = raw_input("There is no directory of '" + usr + "'. " + \
-            #        "Do you want to create a new one?[y/n]:")
-            #    if flag == 'y':
-            #        if self.__usr_dic[usr].vpn_create(self.__rsa):
-                        
-            #    else:
-            #        self.__log.write_error("The '" + usr + "' is lack of directory.")
-            #        return False
+        self.__add_usr(usr)
+        usr_obj = self.__usr_dic[usr]
+        usr_dir = usr_obj.get_usr_dir()
+        conf_dir = usr_dir + '/' + VTAG.DIR_CONFIG + '/'
+        log_dir = usr_dir + '/' + VTAG.DIR_LOG + '/'
+        ca_crt = conf_dir + VTAG.CA_CRT
+        ca_key = conf_dir + VTAG.CA_KEY
+        sev_crt = conf_dir + usr + VTAG.SUF_CRT
+        sev_key = conf_dir + usr + VTAG.SUF_KEY
+        dh_pem = conf_dir + VTAG.DH_PEM1
+        ta_key = conf_dir + VTAG.TA_KEY
+        tap_idx = self.__confxml.findtext(VTAG.XML_TAG_TAPIDX)
+        addr_idx = self.__confxml.findtext(VTAG.XML_TAG_ADDRIDX)
+        port_idx = self.__confxml.findtext(VTAG.XML_TAG_PORTIDX)
+        sev_idx = self.__dataxml.get_usr_sevidx(usr)
+        sev_ips = addr_idx + ' ' + VTAG.IP_MASK8
+        ser_name = VTAG.SEV_NAME + str(sev_idx) 
+        log_pre = log_dir + ser_name + '_'
+        ip_pool = log_pre + VTAG.SIGN_IPP + VTAG.SUF_TXT
+        log_status = log_pre + VTAG.SIGN_STATUS + VTAG.SUF_LOG
+        log_log = log_pre + VTAG.SIGN_LOG + VTAG.SUF_LOG
+        conf_dic[VTAG.TAG_PORT] = VTAG.TAG_PORT + ' ' + port_idx
+        conf_dic[VTAG.TAG_DEV] = VTAG.TAG_DEV + ' ' + VTAG.DEV_TAP + tap_idx
+        conf_dic[VTAG.TAG_SERVER] = VTAG.TAG_SERVER + ' ' + sev_ips
+        conf_dic[VTAG.TAG_CA] = VTAG.TAG_CA + ' ' + ca_crt
+        conf_dic[VTAG.TAG_CERT] = VTAG.TAG_CERT + ' ' + sev_crt
+        conf_dic[VTAG.TAG_KEY] = VTAG.TAG_KEY + ' ' + sev_key
+        conf_dic[VTAG.TAG_DH] = VTAG.TAG_DH + ' ' + dh_pem
+        conf_dic[VTAG.TAG_TLS] = VTAG.TAG_TLS + ' ' + ta_key
+        conf_dic[VTAG.TAG_IPPOOL] = VTAG.TAG_IPPOOL + ' ' + ip_pool
+        conf_dic[VTAG.TAG_STAUS] = VTAG.TAG_STAUS + ' ' + log_status
+        conf_dic[VTAG.TAG_LOG] = VTAG.TAG_LOG + ' ' + log_log
+        usr_obj.vpn_add_server(self.__template, ser_name, conf_dic)
+
+        # add a server for the user in the xml file
+
 
     def __args_default(self):
         self.__dxml_path = self.__confxml.findtext(VTAG.XML_TAG_DATAXML)
@@ -173,6 +198,11 @@ class VpnDeploy(object):
             print "[ERROR]: Lack of log config file."
             return False
         self.__log = VLOG(self.__log_conf, "deploy")
+        self.__template = self.__confxml.findtext(VTAG.XML_TAG_TEMPLATE)
+        if not os.path.isfile(self.__template):
+            print "[ERROR]: Lack of log template file."
+            return False
+
 
     def excute(self):
         """

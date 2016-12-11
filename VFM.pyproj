@@ -14,7 +14,7 @@
     <Name>VFM</Name>
     <RootNamespace>VPN_Deploy</RootNamespace>
     <IsWindowsApplication>False</IsWindowsApplication>
-    <InterpreterId>{9a7a9026-48c1-4688-9d5d-e5699d47d074}</InterpreterId>
+    <InterpreterId>{2af0f10d-7135-4994-9156-5d01c9c11b7e}</InterpreterId>
     <InterpreterVersion>2.7</InterpreterVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -33,7 +33,6 @@
     <Folder Include="Deploy\" />
     <Folder Include="Test\" />
     <Folder Include="Resource\" />
-    <Folder Include="Test\TestArgs\" />
     <Folder Include="Test\TestGuide\" />
     <Folder Include="Test\TestXML\" />
   </ItemGroup>
@@ -65,12 +64,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Deploy\__init__.py" />
-    <Compile Include="Test\TestArgs\args_test.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Test\TestArgs\__init__.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Test\TestGuide\guide_test.py" />
     <Compile Include="Test\TestGuide\__init__.py">
       <SubType>Code</SubType>
@@ -98,16 +91,15 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="Resource\vpn_logging.conf" />
-    <Content Include="test.txt" />
     <Content Include="Test\TestGuide\guide_none.conf" />
     <Content Include="Test\TestGuide\guide_normal.conf" />
     <Content Include="Test\TestXML\vpnconf.xml" />
     <Content Include="Test\TestXML\add_del.xml" />
     <Content Include="Test\TestXML\vpnxml.xml" />
     <Content Include="Test\test.xml" />
-    <Content Include="Tips.log" />
   </ItemGroup>
   <ItemGroup>
+    <InterpreterReference Include="{2af0f10d-7135-4994-9156-5d01c9c11b7e}\2.7" />
     <InterpreterReference Include="{9a7a9026-48c1-4688-9d5d-e5699d47d074}\2.7" />
   </ItemGroup>
   <Import Condition="Exists($(PtvsTargetsFile))" Project="$(PtvsTargetsFile)" />

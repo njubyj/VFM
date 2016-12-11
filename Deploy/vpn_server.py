@@ -252,6 +252,12 @@ class VpnServer(VpnBase):
         Get VPN excute path
         """
         return self.__vpn
+
+    def get_usr_dir(self):
+        """
+        Get the user directory 
+        """
+        return self.__dir_path
     
     def vpn_create(self, rsa):
         """
@@ -278,7 +284,7 @@ class VpnServer(VpnBase):
         """
         Build a new server with 'conf_dic' config
         @template: server config template path
-        @name: server config file name
+        @name: server name
         @conf_dic: server config options dictionary
         """
         if self.__sys == "Windows":
@@ -296,19 +302,13 @@ class VpnServer(VpnBase):
 
         self.__conf_list.append(vpn_cf)
 
-    def get_usr_dir(self):
-        """
-        Get the user directory 
-        """
-        return self.__dir_path
-
     def get_config_list(self):
         """
         Get the object list of the config
         """
         return self.__conf_list
 
-    def vpn_start(self):
+    def vpn_start(self, server):
         """
         Start server list
         """
@@ -320,15 +320,22 @@ class VpnServer(VpnBase):
                 param_dic = {"--writepid":'"' + self.__log_dir + self.__name + ".pid\"", \
                     "--config":'"' + conf.get_path() + '"'}
 
-        try:
-            pid = os.fork()
+            fname = conf.get_file().rsplit('.', 1)[0]
+            if fname == server:
+                try:
+                    pid = os.fork()
 
-            if 0 == pid:
-                self.vpn_shell(self.__vpn, param_dic)
+                    if 0 == pid:
+                        self.vpn_shell(self.__vpn, param_dic)
 
-            else:
-                time.sleep(1)
-                pass
+                    else:
+                        time.sleep(1)
+                        pass
+                except:
+                    self.__vpn_log.write_error("Fork error when starting Vpn server '" + \
+                        server + "'.")
+                finally:
+                    break
 
     def vpn_add_client(self, param = "--batch", name = "client"):
         """

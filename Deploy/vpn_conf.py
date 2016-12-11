@@ -90,6 +90,18 @@ class VpnConf(VpnFile):
         for key in self._val_dic:
             self._val_dic[key] = ""
 
+    def __pack_value(self, tag, attr):
+        val = tag
+        if '#' in attr:
+            val = '#' + val
+            return val
+
+        if tag == VpnTag.TAG_C2C:
+            return val
+                       
+        val = tag + ' ' + attr
+        return val
+
     def get_conf_options(self):
         """
         Get current options in the config file 

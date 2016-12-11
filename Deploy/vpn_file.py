@@ -104,6 +104,12 @@ class VpnFile(object):
         """
         return self._path
 
+    def get_file(self):
+        """
+        Get the file name 
+        """
+        return os.path.basename(self._path)
+
     def is_exist(self):
         """
         Detect the file whether is valid or not

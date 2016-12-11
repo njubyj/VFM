@@ -27,13 +27,11 @@ class TestXML(unittest.TestCase):
     #    v_dir = self.__xml.get_vpn_dir()
     #    self.assertEqual(v_dir, T.xml_vpn_dir)
 
-    def test_get_user_cnt(self):
+    def test_get(self):
         self.__xml = VpnXml(T.xml_common_path)
         self.assertEqual(T.xml_usr_cnt, self.__xml.get_user_cnt())
-
-    def test_get_server_cnt(self):
-        self.__xml = VpnXml(T.xml_common_path)
         self.assertEqual(T.xml_sev_cnt, self.__xml.get_server_cnt())
+        self.assertEqual(T.xml_sev_idx, self.__xml.get_usr_sevidx(T.xml_usr_list[0]))
 
     def test_is_usr_exist(self):
         self.__xml = VpnXml(T.xml_common_path)

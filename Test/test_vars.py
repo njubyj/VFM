@@ -11,6 +11,7 @@ xml_common_path = xml_test_path + "vpnxml.xml"
 # get/detect
 xml_usr_cnt = 1
 xml_sev_cnt = 1
+xml_sev_idx = 2
 xml_usr_list = ["test_tenant"]
 # add/delete 
 xml_ad_path = xml_test_path + "add_del.xml"

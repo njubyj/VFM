@@ -75,14 +75,23 @@ class VpnXml(object):
         """
         return int(self.__xml_parse().findtext(self.__TAG_SEVCNT))
 
+    def __get_usr(self, usr):
+        ptn = self.__TAG_USER + "[@" + self.__ATTR_N + '="' + usr + '"]'
+        return self.__xml_parse().find(ptn)
+
+    def get_usr_sevidx(self, usr):
+        """
+        Get the index of new server of the user
+        @usr: user name
+        """
+        return int(self.__get_usr(usr).findtext(self.__TAG_SEVIDX))
+
     def is_usr_exist(self, usr):
         """
         Detect if the usr existed
         @usr: user name
         """
-        pattern =  self.__TAG_USER + '[@' + self.__ATTR_N + '="' + usr + '"]'
-        node = self.__xml_parse().find(pattern)
-        return (True if node is not None else False)
+        return (True if self.__get_usr(usr) is not None else False)
 
     def xml_add_usr(self, usr, id, dir):
         """
@@ -92,7 +101,6 @@ class VpnXml(object):
         @dir: user directory
         """
         self.__root = self.__xml_parse()
-        tcnt = self.__root.find(self.__TAG_TENCNT)
         attr_dic = {}
         attr_dic[self.__ATTR_ID] = id
         attr_dic[self.__ATTR_N] = usr
@@ -117,9 +125,10 @@ class VpnXml(object):
         usr_ele.append(keydir_ele)
         usr_ele.append(configdir_ele)
         usr_ele.append(logdir_ele)
-        self.__root.append(usr_ele)
         
+        tcnt = self.__root.find(self.__TAG_TENCNT)
         tcnt.text = str(int(tcnt.text) + 1)
+        self.__root.append(usr_ele) 
         self.xml_write()
 
     def xml_del_usr(self, usr):
@@ -136,6 +145,16 @@ class VpnXml(object):
         tcnt = self.__root.find(self.__TAG_TENCNT)
         tcnt.text = str(int(tcnt.text) - 1)
         self.xml_write()
+
+    def xml_add_server(self, usr, name, conf):
+        """
+        Add a user server information into xml file
+        @usr: user name
+        @name: server name
+        @conf: server config dictionary
+        """
+        
+
 
     def xml_write(self):
         """
