@@ -175,9 +175,9 @@ class VpnGuideParser(object):
 
         for sec in sev_secs:
             if self.__conf.has_section(sec):
-                sev_dic = self.__parse_server_sec(sec)
-                if sev_dic:
-                    sev_list.append(sev_dic)
+                sev_tup = self.__parse_server_sec(sec)
+                if sev_tup:
+                    sev_list.append(sev_tup)
 
         return sev_list
 
@@ -206,9 +206,9 @@ class VpnGuideParser(object):
 
         for sec in clt_secs:
             if self.__conf.has_section(sec):
-                clt_dic = self.__parse_client_sec(sec)
-                if clt_dic:
-                    clt_list.append(clt_dic)
+                clt_tup = self.__parse_client_sec(sec)
+                if clt_tup:
+                    clt_list.append(clt_tup)
 
         return clt_list
 

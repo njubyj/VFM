@@ -40,7 +40,6 @@ class VpnDeploy(object):
         self.__dxml_path = ""
         self.__usr_dic = {}
         self.__CONF_SUF = VTAG.VPN_CONF
-        self.init()
 
     def show_usage(self):
         """
@@ -76,7 +75,7 @@ class VpnDeploy(object):
                 return True
         return False
 
-    def __add_usr(self, usr):
+    def __check_usr(self, usr):
         usr_obj = self.__usr_dic[usr]
         usr_dir = usr_obj.get_usr_dir()
         if not os.path.exists(usr_dir):
@@ -89,10 +88,12 @@ class VpnDeploy(object):
             if flag == 'y':
                 # add a usr element in the xml file
                 idx = self.__confxml.find(VTAG.XML_TAG_USRIDX)
-                usr_obj.vpn_create(self.__rsa)
-                self.__dataxml.xml_add_usr(usr, idx.text, usr_dir)
+                usr_idx = idx.text
                 idx.text = str(int(idx.text) + 1)
                 self.__confxml.write(self.__xml_path, encoding = "utf-8")
+                usr_obj.vpn_create(self.__rsa)
+                self.__dataxml.xml_add_usr(usr, usr_idx, usr_dir)
+                
             else:
                 self.__log.write_error("The '" + usr + "' is lack of directory.")
                 return False
@@ -115,56 +116,165 @@ class VpnDeploy(object):
 
         return True
 
-    def __add_server_default(self, usr):
-        self.__add_usr(usr)
+    def __get_tapidx(self):
+        tap = self.__confxml.findtext(VTAG.XML_TAG_TAPIDX)
+        self.__confxml.find(VTAG.XML_TAG_TAPIDX).text = str(int(tap) + 1)
+        self.__confxml.write(self.__xml_path, encoding = "utf-8")
+
+    def __get_portidx(self):
+        port = self.__confxml.findtext(VTAG.XML_TAG_PORTIDX)
+        self.__confxml.find(VTAG.XML_TAG_PORTIDX).text = str(int(port) + 1)
+        self.__confxml.write(self.__xml_path, encoding = "utf-8")
+
+    def __get_ipidx(self):
+        ip = self.__confxml.findtext(VTAG.XML_TAG_ADDRIDX)
+        a_list = ip.split('.')
+        cry = 1
+        for i in range(2, -1, -1):
+            val = int(a_list[i]) + cal
+            a_list[i] = val % 255
+            cal = val // 255
+
+        if not cal == 0:
+            return False
+        else:
+            self.__confxml.find(VTAG.XML_TAG_ADDRIDX).text = ".".join(a_list)
+            self.__confxml.write(self.__xml_path, encoding = "utf-8")
+            return True
+
+    def __add_confidx(self, tap, port, ip):
+        self.__confxml.find(VTAG.XML_TAG_TAPIDX).text = str(int(tap) + 1)
+        self.__confxml.find(VTAG.XML_TAG_PORTIDX).text = str(int(port) + 1)
+        a_list = ip.split('.')
+        cry = 1
+        for i in range(2, -1, -1):
+            val = int(a_list[i]) + cal
+            a_list[i] = val % 255
+            cal = val // 255
+
+        if not cal == 0:
+            return False
+        else:
+            self.__confxml.find(VTAG.XML_TAG_ADDRIDX).text = ".".join(a_list)
+            self.__confxml.write(self.__xml_path, encoding = "utf-8")
+            return True
+
+    def __init_server_conf(self, usr, sev, conf):
+        conf_dic = {}
+        conf_dic[VTAG.TAG_PROTO] = VTAG.PROTO_UDP
+        conf_dic[VTAG.TAG_C2C] = "1"
+        conf_dic[VTAG.TAG_KALIVE] = VTAG.TIME_ALIVE
+        conf_dic[VTAG.TAG_MAXC] = ";"
+
         usr_obj = self.__usr_dic[usr]
         usr_dir = usr_obj.get_usr_dir()
         conf_dir = usr_dir + '/' + VTAG.DIR_CONFIG + '/'
         log_dir = usr_dir + '/' + VTAG.DIR_LOG + '/'
-        ca_crt = conf_dir + VTAG.CA_CRT
-        ca_key = conf_dir + VTAG.CA_KEY
-        sev_crt = conf_dir + usr + VTAG.SUF_CRT
-        sev_key = conf_dir + usr + VTAG.SUF_KEY
-        dh_pem = conf_dir + VTAG.DH_PEM1
-        ta_key = conf_dir + VTAG.TA_KEY
-        tap_idx = self.__confxml.findtext(VTAG.XML_TAG_TAPIDX)
-        addr_idx = self.__confxml.findtext(VTAG.XML_TAG_ADDRIDX)
-        port_idx = self.__confxml.findtext(VTAG.XML_TAG_PORTIDX)
+        conf_dic[VTAG.TAG_CA] = conf_dir + VTAG.CA_CRT
+        conf_dic[VTAG.TAG_CERT] = conf_dir + usr + VTAG.SUF_CRT
+        conf_dic[VTAG.TAG_KEY] = conf_dir + usr + VTAG.SUF_KEY
+        conf_dic[VTAG.TAG_DH] = conf_dir + VTAG.DH_PEM1
+        conf_dic[VTAG.TAG_TLS] = conf_dir + VTAG.TA_KEY
+
+        log_pre = log_dir + sev + '_'
+        conf_dic[VTAG.TAG_IPPOOL] = log_pre + VTAG.SIGN_IPP + VTAG.SUF_TXT
+        conf_dic[VTAG.TAG_STAUS] = log_pre + VTAG.SIGN_STATUS + VTAG.SUF_LOG
+        conf_dic[VTAG.TAG_LOG] = log_pre + VTAG.SIGN_LOG + VTAG.SUF_LOG
+
+        for key in conf:
+            conf_dic[key] = conf[key]
+
+        #conf_dic[VTAG.TAG_PORT] = conf_dic[VTAG.TAG_DEV] = \
+        #conf_dic[VTAG.TAG_CERT] = conf_dic[VTAG.TAG_KEY] = \
+        #conf_dic[VTAG.TAG_SERVER] = conf_dic[VTAG.TAG_TLS] = \
+        #conf_dic[VTAG.TAG_IPPOOL] = conf_dic[VTAG.TAG_STATUS] = \
+        #conf_dic[VTAG.TAG_LOG] = ";"
+
+        return conf_dic
+
+    def __get_server_conf(self, usr, conf = {}):
+        if not conf.has_key(VTAG.OPT_NAME):
+            sev_idx = self.__dataxml.get_usr_sevidx(usr)
+            if ser_idx is None:
+                self.__log.write_error("The user '%s' is none." % usr)
+            ser_name = VTAG.SEV_NAME + str(sev_idx) 
+        else:
+            ser_name = conf[VTAG.OPT_NAME]
+        conf_dic = self.__init_server_conf(usr, ser_name, conf)
+
+        if not conf.has_key(VTAG.TAG_PORT):
+            port_idx = self.__get_portidx()
+            conf_dic[VTAG.TAG_PORT] = port_idx
+        else:
+            conf_dic[VTAG.TAG_PORT] = conf[VTAG.TAG_PORT]
+
+        if not conf.has_key(VTAG.TAG_DEV):
+            tap_idx = self.__get_tapidx()
+            conf_dic[VTAG.TAG_DEV] = tap_idx
+        else:
+            conf_dic[VTAG.TAG_DEV] = conf[VTAG.TAG_DEV]
+
+        if not conf.has_key(VTAG.TAG_SERVER):
+            addr_idx = self.__get_ipidx()
+            conf_dic[VTAG.TAG_SERVER] = addr_idx
+        else:
+            conf_dic[VTAG.TAG_SERVER] = conf[VTAG.TAG_SERVER]
+
+        return ser_name, conf_dic
+        
+    def __add_server_default(self, usr):
+        self.__check_usr(usr)
+        #tap_idx = self.__confxml.findtext(VTAG.XML_TAG_TAPIDX)
+        #addr_idx = self.__confxml.findtext(VTAG.XML_TAG_ADDRIDX)
+        #port_idx = self.__confxml.findtext(VTAG.XML_TAG_PORTIDX)
+        #if not self.__add_confidx(tap_idx, port_idx, addr_idx):
+        #    self.__log.write_error("No more ip address for one new server.")
+        #    return False
+
+        usr_obj = self.__usr_dic[usr]
+        #usr_dir = usr_obj.get_usr_dir()
+        #conf_dir = usr_dir + '/' + VTAG.DIR_CONFIG + '/'
+        #log_dir = usr_dir + '/' + VTAG.DIR_LOG + '/'
         sev_idx = self.__dataxml.get_usr_sevidx(usr)
-        sev_ips = addr_idx + ' ' + VTAG.IP_MASK8
         ser_name = VTAG.SEV_NAME + str(sev_idx) 
-        log_pre = log_dir + ser_name + '_'
-        ip_pool = log_pre + VTAG.SIGN_IPP + VTAG.SUF_TXT
-        log_status = log_pre + VTAG.SIGN_STATUS + VTAG.SUF_LOG
-        log_log = log_pre + VTAG.SIGN_LOG + VTAG.SUF_LOG
-        conf_dic[VTAG.TAG_PORT] = VTAG.TAG_PORT + ' ' + port_idx
-        conf_dic[VTAG.TAG_DEV] = VTAG.TAG_DEV + ' ' + VTAG.DEV_TAP + tap_idx
-        conf_dic[VTAG.TAG_SERVER] = VTAG.TAG_SERVER + ' ' + sev_ips
-        conf_dic[VTAG.TAG_CA] = VTAG.TAG_CA + ' ' + ca_crt
-        conf_dic[VTAG.TAG_CERT] = VTAG.TAG_CERT + ' ' + sev_crt
-        conf_dic[VTAG.TAG_KEY] = VTAG.TAG_KEY + ' ' + sev_key
-        conf_dic[VTAG.TAG_DH] = VTAG.TAG_DH + ' ' + dh_pem
-        conf_dic[VTAG.TAG_TLS] = VTAG.TAG_TLS + ' ' + ta_key
-        conf_dic[VTAG.TAG_IPPOOL] = VTAG.TAG_IPPOOL + ' ' + ip_pool
-        conf_dic[VTAG.TAG_STAUS] = VTAG.TAG_STAUS + ' ' + log_status
-        conf_dic[VTAG.TAG_LOG] = VTAG.TAG_LOG + ' ' + log_log
+        #log_pre = log_dir + ser_name + '_'
+        #conf_dic[VTAG.TAG_PORT] = port_idx
+        #conf_dic[VTAG.TAG_DEV] = VTAG.DEV_TAP + tap_idx
+        #conf_dic[VTAG.TAG_SERVER] = addr_idx + ' ' + VTAG.IP_MASK8
+        #conf_dic[VTAG.TAG_CA] = conf_dir + VTAG.CA_CRT
+        #conf_dic[VTAG.TAG_CERT] = conf_dir + usr + VTAG.SUF_CRT
+        #conf_dic[VTAG.TAG_KEY] = conf_dir + usr + VTAG.SUF_KEY
+        #conf_dic[VTAG.TAG_DH] = conf_dir + VTAG.DH_PEM1
+        #conf_dic[VTAG.TAG_TLS] = conf_dir + VTAG.TA_KEY
+        #conf_dic[VTAG.TAG_IPPOOL] = log_pre + VTAG.SIGN_IPP + VTAG.SUF_TXT
+        #conf_dic[VTAG.TAG_STAUS] = log_pre + VTAG.SIGN_STATUS + VTAG.SUF_LOG
+        #conf_dic[VTAG.TAG_LOG] = log_pre + VTAG.SIGN_LOG + VTAG.SUF_LOG
+        ser_name, conf_dic = self.__get_server_conf(usr)
         usr_obj.vpn_add_server(self.__template, ser_name, conf_dic)
 
         # add a server for the user in the xml file
+        self.__dataxml.xml_add_server(usr, ser_name, conf_dic)
 
+        return True
 
-    def __args_default(self):
-        self.__dxml_path = self.__confxml.findtext(VTAG.XML_TAG_DATAXML)
-        self.__dataxml = VXML(self.__dxml_path)
-        if not os.path.isfile(self.__dxml_path):
-            self.__dataxml.xml_create() 
-        self.__guide_path = self.__confxml.findtext(VTAG.XML_TAG_GUIDE)
-        if not os.path.isfile(self.__guide_path):
-            self.__log.write_error("Lack of guide config file.")
+    def __add_server(self, usr, conf):
+        # add a server according to different config
+        if not self.__check_usr(usr):
             return False
-        self.__guide = VGP(self.__guide_path)
+
+        ser_name, conf_dic = self.__get_server_conf(usr)
+        usr_obj = self.__usr_dic[usr]
+        usr_obj.vpn_add_server(self.__template, ser_name, conf_dic)
+        # add a server for the user in the xml file
+        self.__dataxml.xml_add_server(usr, ser_name, conf_dic)
+
+        self.__log.write_ex("Add '%s' server for '%s' successfully." % \
+            (ser_name, usr))
+
+        return True
+
+    def __manage_server(self):
         sev_list = self.__guide.get_servers()
-        clt_list = self.__guide.get_clients()
 
         for sev in sev_list:
             usr_n = sev[0]
@@ -175,8 +285,78 @@ class VpnDeploy(object):
             self.__usr_dic[usr_n] = usr_obj
                           
             if task == VTAG.TASK_ADD:
-                # add server default
+                # add server 
+                if not self.__add_server(usr_n, op_dic):
+                    return False
+
+            elif task == VTAG.TASK_DEL:
+                # del 
                 pass
+            elif task == VTAG.TASK_SEA:
+                # search
+                pass
+            elif task == VTAG.TASK_UP:
+                #update
+                pass
+
+    def __add_client(self, usr, conf):
+        if not self.__check_usr(usr):
+            return False
+
+        if not conf.has_key(VTAG.OPT_NAME):
+            self.__log.write_error(\
+                "The client which is being added is lack of name.")
+            return False
+
+        usr_obj = self.__usr_dic[usr]
+        if not usr_obj.vpn_add_client(name = conf[VTAG.OPT_NAME]):
+            self.__log.write_error("Fail to add '%s' client certification." % \
+                conf[VTAG.OPT_NAME])
+            return False
+     
+        return True
+
+    def __manage_client(self):
+        clt_list = self.__guide.get_clients()
+
+        for usr_n, op_dic in clt_list:
+            task = op_dic[VTAG.OPT_TASK]
+
+            if task == VTAG.TASK_ADD:
+                # add client
+                if not self.__add_client(self, usr_n, op_dic):
+                    return False
+
+            elif task == VTAG.TASK_DEL:
+                # del 
+                pass
+            elif task == VTAG.TASK_SEA:
+                # search
+                pass
+            elif task == VTAG.TASK_UP:
+                #update
+                pass
+            pass
+
+       
+    def __args_default(self):
+        self.__dxml_path = self.__confxml.findtext(VTAG.XML_TAG_DATAXML)
+        self.__dataxml = VXML(self.__dxml_path)
+        if not os.path.isfile(self.__dxml_path):
+            self.__dataxml.xml_create() 
+        self.__guide_path = self.__confxml.findtext(VTAG.XML_TAG_GUIDE)
+        if not os.path.isfile(self.__guide_path):
+            self.__log.write_error("Lack of guide config file.")
+            return False
+        self.__guide = VGP(self.__guide_path)
+
+        if not self.__manage_server():
+            return False
+
+        if not self.__manage_client():
+            return False
+
+        return True
 
     def init(self):
         """
@@ -203,7 +383,6 @@ class VpnDeploy(object):
             print "[ERROR]: Lack of log template file."
             return False
 
-
     def excute(self):
         """
         Excute operations 
@@ -212,14 +391,13 @@ class VpnDeploy(object):
         self.parse_argv()
 
         if not self.__args:
-            
             # args default
-            pass
+            self.__args_default()
             
-
-
-
 if __name__ == "__main__":
+
+    for a,b in []:
+        print "yes"
 
     
     pass

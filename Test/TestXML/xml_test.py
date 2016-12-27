@@ -39,6 +39,10 @@ class TestXML(unittest.TestCase):
         f = self.__xml.is_usr_exist("test_asdf")
         self.assertTrue(t)
         self.assertFalse(f)
+        t = self.__xml.is_server_exist(T.xml_usr_list[0], T.xml_sev_list[0])
+        f = self.__xml.is_server_exist(T.xml_usr_list[0], "server_sss")
+        self.assertTrue(t)
+        self.assertFalse(f)
 
     def test_add_del(self):
         self.__xml = VpnXml(T.xml_ad_path)
@@ -46,6 +50,25 @@ class TestXML(unittest.TestCase):
         tcnt = self.__xml.get_user_cnt()
         self.assertEqual(tcnt, T.xmla_ust_cnt)
         self.assertTrue(self.__xml.is_usr_exist(T.xml_usr_list[0]))
+
+        self.__xml.xml_add_server(T.xml_usr_list[0], T.xml_sev_list[0], \
+            T.xml_conf_dic)
+        scnt = self.__xml.get_server_cnt()
+        uscnt = self.__xml.get_usr_sevcnt(T.xml_usr_list[0])
+        sidx = self.__xml.get_usr_sevidx(T.xml_usr_list[0])
+        self.assertEqual(scnt, T.xmla_sev_cnt)
+        self.assertEqual(uscnt, T.xmlau_sev_cnt)
+        self.assertEqual(sidx, T.xmlau_sev_idx)
+        self.assertTrue(self.__xml.is_server_exist(T.xml_usr_list[0], T.xml_sev_list[0]))
+
+        self.__xml.xml_del_server(T.xml_usr_list[0], T.xml_sev_list[0])
+        scnt = self.__xml.get_server_cnt()
+        uscnt = self.__xml.get_usr_sevcnt(T.xml_usr_list[0])
+        sidx = self.__xml.get_usr_sevidx(T.xml_usr_list[0])
+        self.assertEqual(scnt, T.xmld_sev_cnt)
+        self.assertEqual(uscnt, T.xmldu_sev_cnt)
+        self.assertEqual(sidx, T.xmldu_sev_idx)
+        self.assertFalse(self.__xml.is_server_exist(T.xml_usr_list[0], T.xml_sev_list[0]))
         
         self.__xml.xml_del_usr(T.xml_usr_list[0])
         tcnt = self.__xml.get_user_cnt()

@@ -1,7 +1,7 @@
 <openvpn>
 
   <tenantcnt>1</tenantcnt>
-  <servercnt>1</servercnt>
+  <servertotal>1</servertotal>
 
   <user id="1" n="test_tenant" dir="/usr/apps/OpenVPN/z_test_tenant">
 
@@ -16,10 +16,10 @@
       <proto>udp</proto>
       <dev>tap3</dev>
       <ips>10.9.3.0</ips>
+      <mask>255.255.255.0</mask>
       <alive>10 120</alive>
       <max></max>
       <ctoc>1</ctoc>
-      <keydir>keys</keydir>
       <ftpinfo>ftp001,ftp123456</ftpinfo>
 
       <keysconf path="/usr/apps/OpenVPN/z_test_tenant/config/">

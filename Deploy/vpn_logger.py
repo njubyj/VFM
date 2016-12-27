@@ -53,7 +53,7 @@ class VpnLog(object):
         """
         Write log with extra tag
         """
-        lg = ex + info + ex
+        lg = ex + ' ' + info + ' ' + ex
 
         if flag == self.LOG_D:
             self.write_debug(lg)

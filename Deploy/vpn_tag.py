@@ -31,6 +31,7 @@ class VpnTag(object):
     SUF_KEY = ".key"
     SUF_TXT = ".txt"
     SUF_LOG = ".log"
+    SUF_PID = ".pid"
     CA_CRT = "ca.crt"
     CA_KEY = "ca.key"
     TA_KEY = "ta.key"
@@ -45,6 +46,7 @@ class VpnTag(object):
     SIGN_STATUS = "status"
     VPN_CONF = ".conf"
     VPN_OVPN = ".ovpn"
+    TIME_ALIVE = "10 120"
 
     SEC_VPN = "vpn"
     SEC_OPTIONS = "options"
@@ -79,7 +81,7 @@ class VpnTag(object):
 
     VPN_OPS_DIC = {\
         TAG_PORT:"", \
-        TAG_PROTO:"proto udp", \
+        TAG_PROTO:"udp", \
         TAG_DEV:"", \
         TAG_CA:"", \
         TAG_CERT:"", \
@@ -87,10 +89,10 @@ class VpnTag(object):
         TAG_DH:"", \
         TAG_SERVER:"", \
         TAG_IPPOOL:"", \
-        TAG_C2C:"client-to-client", \
-        TAG_KALIVE:"keepalive 10 120", \
+        TAG_C2C:"1", \
+        TAG_KALIVE:"10 120", \
         TAG_TLS:"", \
-        TAG_MAXC:";max-clients 100", \
+        TAG_MAXC:";", \
         TAG_STATUS:"", \
         TAG_LOG:""}
 

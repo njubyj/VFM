@@ -46,13 +46,13 @@ class VpnConf(VpnFile):
             VpnTag.TAG_KEY:r"(^key [\S|\s]*?$)", \
             VpnTag.TAG_DH:r"(^dh [\S|\s]*?$)", \
             VpnTag.TAG_SERVER:r"(^server [\S|\s]*?$)", \
-            VpnTag.TAG_IPPOOL:r"(^[#;]*ifconfig\-pool\-persist[\S|\s]*?$)", \
+            VpnTag.TAG_IPPOOL:r"(^[#;]*ifconfig\-pool\-persist [\S|\s]*?$)", \
             VpnTag.TAG_C2C:r"(^[#;]*client\-to\-client[\S|\s]*?$)", \
             VpnTag.TAG_KALIVE:r"(^keepalive [\S|\s]*?$)", \
             VpnTag.TAG_TLS:r"(^tls\-auth [\S|\s]*?$)", \
             VpnTag.TAG_MAXC:r"(^[#;]*max\-clients [\S|\s]*?$)", \
-            VpnTag.TAG_STATUS:r"(^[#;]*status[\S|\s]*?$)", \
-            VpnTag.TAG_LOG:r"(^[#;]*log[\S|\s]*?$)"}
+            VpnTag.TAG_STATUS:r"(^[#;]*status [\S|\s]*?$)", \
+            VpnTag.TAG_LOG:r"(^[#;]*log [\S|\s]*?$)"}
         self._val_dic = {\
             VpnTag.TAG_PORT:"", \
             VpnTag.TAG_PROTO:"", \
@@ -92,15 +92,33 @@ class VpnConf(VpnFile):
 
     def __pack_value(self, tag, attr):
         val = tag
-        if '#' in attr:
-            val = '#' + val
+        if ('#' or ';') in attr:
+            val = ';' + val + ' '
             return val
 
         if tag == VpnTag.TAG_C2C:
-            return val
+            if attr == '1':
+                return val
+            return ';' + val
                        
         val = tag + ' ' + attr
         return val
+
+    def __get_option(self, tag):
+        conf_file = open(self._path, 'r')
+        context = conf_file.readlines()
+        conf_file.close()
+
+        for line in context:
+            if re.match(self._re_dic[tag], line):
+                if tag == self._TAG_C2C:
+                    if line[0] == 'c':
+                        return '1'
+                    else:
+                        return '0'
+                if line[0] == '#' or line[0] == ';':
+                    return ""
+                return line.strip('\n').split(' ', 1)[1]
 
     def get_conf_options(self):
         """
@@ -133,7 +151,8 @@ class VpnConf(VpnFile):
 
         for key in self._val_dic:
             if not self._val_dic[key] == "":
-                context = re.sub(self._re_dic[key], self._val_dic[key], context, 1, re.M)
+                attr = self.__pack_value(key, self._val_dic[key])
+                context = re.sub(self._re_dic[key], attr, context, 1, re.M)
 
         conf_file = open(self._path, 'w')
         conf_file.write(context)
@@ -144,7 +163,7 @@ class VpnConf(VpnFile):
         Set the port number in the file
         """
         self.set_port_var(port)
-
+        port = self.__pack_value(VpnTag.TAG_PORT, port)
         self.vpn_line_update_re(self._re_dic[VpnTag.TAG_PORT], port)
 
     def set_port_var(self, port):
@@ -164,7 +183,7 @@ class VpnConf(VpnFile):
         Set the protocal type in the file
         """
         self.set_proto_var(proto)
-
+        proto = self.__pack_value(VpnTag.TAG_PROTO, proto)
         self.vpn_line_update_re(self._re_dic[VpnTag.TAG_PROTO], proto)
 
     def set_proto_var(self, proto):
@@ -184,7 +203,7 @@ class VpnConf(VpnFile):
         Set the device in the file
         """
         self.set_dev_var(dev)
-
+        dev = self.__pack_value(VpnTag.TAG_DEV, dev)
         self.vpn_line_update_re(self._re_dic[VpnTag.TAG_DEV], dev)
 
     def set_dev_var(self, dev):
@@ -204,7 +223,7 @@ class VpnConf(VpnFile):
         Set the ca certificate in the file
         """
         self.set_ca_var(ca)
-
+        ca = self.__pack_value(VpnTag.TAG_CA, CA)
         self.vpn_line_update_re(self._re_dic[VpnTag.TAG_CA], ca)
 
     def set_ca_var(self, ca):
@@ -224,7 +243,7 @@ class VpnConf(VpnFile):
         Set the server certificertte in the file
         """
         self.set_cert_var(cert)
-
+        cert = self.__pack_value(VpnTag.TAG_CERT, cert)
         self.vpn_line_update_re(self._re_dic[VpnTag.TAG_CERT], cert)
 
     def set_cert_var(self, cert):
@@ -244,7 +263,7 @@ class VpnConf(VpnFile):
         Set the server key in the file
         """
         self.set_key_var(key)
-
+        key = self.__pack_value(VpnTag.TAG_KEY, key)
         self.vpn_line_update_re(self._re_dic[VpnTag.TAG_KEY], key)
 
     def set_key_var(self, key):
@@ -264,7 +283,7 @@ class VpnConf(VpnFile):
         Set the server dh in the file
         """
         self.set_dh_var(dh)
-
+        dh = self.__pack_value(VpnTag.TAG_DH, dh)
         self.vpn_line_update_re(self._re_dic[VpnTag.TAG_DH], dh)
 
     def set_dh_var(self, dh):
@@ -284,7 +303,7 @@ class VpnConf(VpnFile):
         Set the vpn ip range in the file
         """
         self.set_server_var(server)
-
+        server = self.__pack_value(VpnTag.TAG_SERVER, server)
         self.vpn_line_update_re(self._re_dic[VpnTag.TAG_SERVER], server)
 
     def set_server_var(self, server):
@@ -304,7 +323,7 @@ class VpnConf(VpnFile):
         Set the ifconfig-pool-persist in the file
         """
         self.set_ippool_var(ippool)
-
+        ippool = self.__pack_value(VpnTag.TAG_IPPOOL, ippool)
         self.vpn_line_update_re(self._re_dic[VpnTag.TAG_IPPOOL], ippool)
 
     def set_ippool_var(self, ippool):
@@ -324,7 +343,7 @@ class VpnConf(VpnFile):
         Set the client-to-client in the file
         """
         self.set_c2c_var(c2c)
-
+        c2c = self.__pack_value(VpnTag.TAG_C2C, c2c)
         self.vpn_line_update_re(self._re_dic[VpnTag.TAG_C2C], c2c)
 
     def set_c2c_var(self, c2c):
@@ -344,7 +363,7 @@ class VpnConf(VpnFile):
         Set the keepalive in the file
         """
         self.set_kalive_var(kalive)
-
+        kalive = self.__pack_value(VpnTag.TAG_KALIVE, kalive)
         self.vpn_line_update_re(self._re_dic[VpnTag.TAG_KALIVE], kalive)
 
     def set_kalive_var(self, kalive):
@@ -364,7 +383,7 @@ class VpnConf(VpnFile):
         Set the tls-auth in the file
         """
         self.set_tls_var(tls)
-
+        tls = self.__pack_value(VpnTag.TAG_TLS, tls)
         self.vpn_line_update_re(self._re_dic[VpnTag.TAG_TLS], tls)
 
     def set_tls_var(self, tls):
@@ -384,7 +403,7 @@ class VpnConf(VpnFile):
         Set the max-clients in the file
         """
         self.set_maxc_var(maxc)
-
+        maxc = self.__pack_value(VpnTag.TAG_MAXC, maxc)
         self.vpn_line_update_re(self._re_dic[VpnTag.TAG_MAXC], maxc)
 
     def set_maxc_var(self, maxc):
@@ -404,7 +423,7 @@ class VpnConf(VpnFile):
         Set the status log in the file
         """
         self.set_status_var(status)
-
+        status = self.__pack_value(VpnTag.TAG_STATUS, status)
         self.vpn_line_update_re(self._re_dic[VpnTag.TAG_STATUS], status)
 
     def set_status_var(self, status):
@@ -424,7 +443,7 @@ class VpnConf(VpnFile):
         Set the log in the file
         """
         self.set_log_var(log)
-
+        log = self.__pack_value(VpnTag.TAG_LOG, log)
         self.vpn_line_update_re(self._re_dic[VpnTag.TAG_LOG], log)
 
     def set_log_var(self, log):
