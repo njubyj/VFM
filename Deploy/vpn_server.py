@@ -3,18 +3,30 @@
 __author__ = 'yjbao'
 
 import os
+import re
 import time
 import platform
 import shutil
 from vpn_conf import VpnConf
 from vpn_logger import VpnLog
 from vpn_base import VpnBase
+from vpn_tag import VpnTag as VTAG
+from vpn_file import VpnFile 
 
 class VpnServer(VpnBase):
     """
     Manage VPN tenant server
     """
     
+    #self.__vpn: vpn 
+    #self.__name: user name
+    #self.__dir_path: user root directory
+    #self.__config_dir: user config directory
+    #self.__key_dir: user key directory
+    #self.__log_dir: user log directory
+    #self.__conf_list: user server config files list
+    #self.__vpn_log: log handle
+
     __sys = platform.system()
     
     __SH_VPN = "openvpn"
@@ -28,6 +40,7 @@ class VpnServer(VpnBase):
     __OP_BATCH = "--batch"
     __OP_SECRET = "--secret"
     __OP_GENKEY = "--genkey"
+    __INDEX_F = "index.txt"
 
     def __init__(self, name, path, log):
         self.__vpn = "openvpn"
@@ -240,6 +253,25 @@ class VpnServer(VpnBase):
         elif key == VpnConf.TAG_LOG:
             vpn_cf.set_log_var(attr)
 
+    def __check_client_crt(self, name):
+        crt_file = self.__key_dir + name + VTAG.SUF_CRT
+
+        if (os.path.isfile(crt_file)) and (os.path.getsize(crt_file) > 0):
+            return True
+        else:
+            return False
+
+    def __get_client_num(self, name):
+
+        file = self.__dir_path + '/' + self.__INDEX_F
+        ptn = r"/CN=" + name + "/"
+        if os.path.isfile(file):
+            res = VpnFile(file).vpn_get_line(ptn)
+            if res:
+                return re.split("\s+", line)[1]
+
+        return ""
+
     def set_vpn(self, vpn):
         """
         Set VPN excute path
@@ -279,6 +311,33 @@ class VpnServer(VpnBase):
         self.__vpn_log.write_ex(log_str)
 
         return True
+
+    def has_server(self, name):
+        """
+        Detect the server whether exists or not
+        @name: server name
+        """
+        if self.__sys == "Windows":
+            conf = self.__config_dir + name + VTAG.VPN_OVPN
+        else:
+            conf = self.__config_dir + name + VTAG.VPN_CONF
+
+        if os.path.isfile(conf):
+            return True
+        else:
+            return False
+
+    def vpn_del_server(self, name):
+        """
+        Delete a server 
+        @name: server name
+        """
+        if self.__sys == "Windows":
+            conf = self.__config_dir + name + VTAG.VPN_OVPN
+        else:
+            conf = self.__config_dir + name + VTAG.VPN_CONF
+
+        self._remove_file(conf)
 
     def vpn_add_server(self, template, name, conf_dic):
         """
@@ -337,6 +396,47 @@ class VpnServer(VpnBase):
                 finally:
                     break
 
+    def has_client(self, name):
+        """
+        Detect the client whether exists or not
+        @name: client name
+        """
+        clt_pre = self.__key_dir + name
+        crt = clt_pre + VTAG.SUF_CRT
+        csr = clt_pre + VTAG.SUF_CSR
+        key = clt_pre + VTAG.SUF_KEY
+        num = self.__get_client_num(name)
+
+        if num or os.path.isfile(crt) \
+            or os.path.isfile(csr) \
+            or os.path.isfile(key):
+            return True
+        else:
+            return False
+
+    def vpn_del_client(self, name):
+        """
+        Delete a client certification
+        @name: client name
+        """
+        os.chdir(self.__dir_path)
+        
+        clt_pre = self.__key_dir + name
+        crt = clt_pre + VTAG.SUF_CRT
+        csr = clt_pre + VTAG.SUF_CSR
+        key = clt_pre + VTAG.SUF_KEY
+        num = self.__get_client_num(name)
+        if num:
+            pem = self.__key_dir + num + VTAG.SUF_PEM
+            self._remove_file(pem)
+            file = self.__dir_path + '/' + self.__INDEX_F
+            ptn = r"/CN=" + name + "/"
+            VpnFile(file).vpn_delete_line(ptn)
+
+        self._remove_file(crt)
+        self._remove_file(csr)
+        self._remove_file(key)
+
     def vpn_add_client(self, param = "--batch", name = "client"):
         """
         Build a client certification
@@ -351,10 +451,17 @@ class VpnServer(VpnBase):
         
         cmd += self.__SH_CLIENT + " " + param + " " + name
 
-        res = os.system(cmd)
+        retry = 0
 
-        if res != 0:
+        while (not self.__check_client_crt(name)) and (retry < 3):
+
+            self.vpn_del_client(name)
+            res = os.system(cmd)
+            retry += 1
+
+        if retry >= 3:
             return False
+
 
         return True
 

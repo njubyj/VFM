@@ -12,6 +12,10 @@ class VpnBase(object):
     def __init__(self):
         pass
 
+    def _remove_file(self, file):
+        if os.path.isfile(file):
+            os.remove(file)
+
     def vpn_shell(self, sh, param):
         """
         Execute vpn shell 

@@ -108,17 +108,19 @@ class VpnConf(VpnFile):
         conf_file = open(self._path, 'r')
         context = conf_file.readlines()
         conf_file.close()
+        res = ""
 
         for line in context:
             if re.match(self._re_dic[tag], line):
                 if tag == self._TAG_C2C:
                     if line[0] == 'c':
-                        return '1'
+                        res = '1'
                     else:
-                        return '0'
-                if line[0] == '#' or line[0] == ';':
-                    return ""
-                return line.strip('\n').split(' ', 1)[1]
+                        res = '0' if res == "" else res
+                if not (line[0] == '#' or line[0] == ';'):
+                    res = re.split('\s+', line.strip('\n'))[1]
+
+        return res
 
     def get_conf_options(self):
         """
@@ -132,12 +134,16 @@ class VpnConf(VpnFile):
         for line in context:
             for key in self._re_dic:
                 if re.match(self._re_dic[key], line):
-                    #if key == self._TAG_C2C:
-                    #    if line[0] == 'c':
-                    #        self._val_dic[key] = '1'
-                    #    continue
-                    #if not (line[0] == '#' or line[0] == ';'):
-                    self._old_dic[key] = line.strip('\n')
+                    if key == self._TAG_C2C:
+                        if line[0] == 'c':
+                            self._old_dic[key] = '1'
+                        else:
+                            self._old_dic[key] = '0'
+                        continue
+                    if line[0] == '#' or line[0] == ';':
+                        self._old_dic[key] = ''
+                        continue
+                    self._old_dic[key] = re.split("\s+", line.strip('\n'))[1]
 
         return self._old_dic
     
@@ -176,7 +182,7 @@ class VpnConf(VpnFile):
         """
         Get the port number
         """
-        return self._val_dic[VpnTag.TAG_PORT]
+        return self.__get_option(VpnTag.TAG_PORT)
 
     def set_proto(self, proto):
         """
@@ -196,7 +202,7 @@ class VpnConf(VpnFile):
         """
         Get the protocal type
         """
-        return self._val_dic[VpnTag.TAG_PROTO]
+        return self.__get_option(VpnTag.TAG_PROTO)
     
     def set_dev(self, dev):
         """
@@ -216,7 +222,7 @@ class VpnConf(VpnFile):
         """
         Get the device 
         """
-        return self._val_dic[VpnTag.TAG_DEV]
+        return self.__get_option(VpnTag.TAG_DEV)
 
     def set_ca(self, ca):
         """
@@ -236,7 +242,7 @@ class VpnConf(VpnFile):
         """
         Get the ca certificate 
         """
-        return self._val_dic[VpnTag.TAG_CA]
+        return self.__get_option(VpnTag.TAG_CA)
 
     def set_cert(self, cert):
         """
@@ -256,7 +262,7 @@ class VpnConf(VpnFile):
         """
         Get the server certificertte 
         """
-        return self._val_dic[VpnTag.TAG_CERT]
+        return self.__get_option(VpnTag.TAG_CERT)
 
     def set_key(self, key):
         """
@@ -276,7 +282,7 @@ class VpnConf(VpnFile):
         """
         Get the server key 
         """
-        return self._val_dic[VpnTag.TAG_KEY]
+        return self.__get_option(VpnTag.TAG_KEY)
 
     def set_dh(self, dh):
         """
@@ -296,7 +302,7 @@ class VpnConf(VpnFile):
         """
         Get the server dh 
         """
-        return self._val_dic[VpnTag.TAG_DH]
+        return self.__get_option(VpnTag.TAG_DH)
 
     def set_server(self, server):
         """
@@ -316,7 +322,7 @@ class VpnConf(VpnFile):
         """
         Get the vpn ip range
         """
-        return self._val_dic[VpnTag.TAG_SERVER]
+        return self.__get_option(VpnTag.TAG_SERVER)
 
     def set_ippool(self, ippool):
         """
@@ -336,7 +342,7 @@ class VpnConf(VpnFile):
         """
         Get the ifconfig-pool-persist
         """
-        return self._val_dic[VpnTag.TAG_IPPOOL]
+        return self.__get_option(VpnTag.TAG_IPPOOL)
 
     def set_c2c(self, c2c):
         """
@@ -356,7 +362,7 @@ class VpnConf(VpnFile):
         """
         Get the client-to-client
         """
-        return self._val_dic[VpnTag.TAG_C2C]
+        return self.__get_option(VpnTag.TAG_C2C)
 
     def set_kalive(self, kalive):
         """
@@ -376,7 +382,7 @@ class VpnConf(VpnFile):
         """
         Get the keepalive
         """
-        return self._val_dic[VpnTag.TAG_KALIVE]
+        return self.__get_option(VpnTag.TAG_KALIVE)
 
     def set_tls(self, tls):
         """
@@ -396,7 +402,7 @@ class VpnConf(VpnFile):
         """
         Get the tls-auth
         """
-        return self._val_dic[VpnTag.TAG_TLS]
+        return self.__get_option(VpnTag.TAG_TLS)
     
     def set_maxc(self, maxc):
         """
@@ -416,7 +422,7 @@ class VpnConf(VpnFile):
         """
         Get the max-clients
         """
-        return self._val_dic[VpnTag.TAG_MAXC]
+        return self.__get_option(VpnTag.TAG_MAXC)
 
     def set_status(self, status):
         """
@@ -436,7 +442,7 @@ class VpnConf(VpnFile):
         """
         Get the status log
         """
-        return self._val_dic[VpnTag.TAG_STATUS]
+        return self.__get_option(VpnTag.TAG_STATUS)
 
     def set_log(self, log):
         """
@@ -456,7 +462,7 @@ class VpnConf(VpnFile):
         """
         Get the log
         """
-        return self._val_dic[VpnTag.TAG_LOG]
+        return self.__get_option(VpnTag.TAG_LOG)
 
 
 if __name__ == "__main__":

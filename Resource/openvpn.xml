@@ -1,7 +1,7 @@
 <openvpn>
 
   <tenantcnt>2</tenantcnt>
-  <servertotal>1</servertotal>
+  <servercnt>1</servercnt>
   
   <user id="1" n="test_tenant" dir="/usr/apps/OpenVPN/z_test_tenant">
 
@@ -16,13 +16,13 @@
       <proto>udp</proto>
       <dev>tap3</dev>
       <ips>10.9.3.0</ips>
-      <mask>255.255.255.0</mask>
       <alive>10 120</alive>
       <max></max>
       <ctoc>1</ctoc>
+      <keydir>keys</keydir>
       <ftpinfo>ftp001,ftp123456</ftpinfo>
 
-      <keysconf>
+      <keysconf path="/usr/apps/OpenVPN/z_test_tenant/config/">
         <ca>ca.crt</ca>
         <dh>dh1024.pem</dh>
         <tls>ta.key</tls>
@@ -30,11 +30,11 @@
         <key>test_tenant.key</key>
       </keysconf>
 
-      <logmsg>
+      <logmsg path="/usr/apps/OpenVPN/z_test_tenant/log/">
         <ippool>ipp.txt</ippool>
         <log>openvpn.log</log>
         <status>openvpn-status.log</status>
-        <pid>server1.pid</pid>
+        <pid>test_tenant1</pid>
       </logmsg>
     </server>
 

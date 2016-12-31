@@ -25,11 +25,22 @@ TAG_LOG = "log"
 app_dir = "/usr/apps/OpenVPN"
 
 
+### file test variables
+file_test_path = "./Test/TestFile/"
+file_del_txt = file_test_path + "delete.txt"
+file_up_txt = file_test_path + "update.txt"
+file_bak_txt = file_test_path + "backup.txt"
+file_tmp_line = \
+r"V	261226032253Z		03	unknown	/C=US/ST=CA/L=SanFrancisco/O=OpenVPN/OU=changeme/CN=cc3/name=changeme/emailAddress=mail@host.domain"
+file_key_str = r"CN=cc2"
+file_re_str = r"(^[ \t\r\f\v|\S]+?CN=cc2[\s|\S]+?$)"
+file_new_str = "ok!!!"
 
 
 ### xml test variables
 xml_test_path = "./Test/TestXML/"
 xml_common_path = xml_test_path + "vpnxml.xml"
+xml_bak_path = xml_test_path + "backup.xml"
 # get/detect
 xml_usr_cnt = 1
 xml_sev_cnt = 1

@@ -5,6 +5,7 @@ __author__ = "yjbao"
 import os
 import platform
 import re
+import shutil
 
 class VpnFile(object):
     """
@@ -26,13 +27,20 @@ class VpnFile(object):
         @return: line number or -1 
         """
         
-        cmd = r'findstr /n "' + text + '" ' + self._path
-
+        cpath = os.getcwd()
+        abspath = os.path.abspath(self._path)
+        dir = os.path.dirname(abspath)
+        filename = os.path.basename(abspath)
+        cmd = r'findstr /n "' + text + '" ' + filename
+        os.chdir(dir)
         res = os.popen(cmd)
-        line = res.read().strip().split(':', 1)[0]
+        line = res.read()
         res.close()
+        os.chdir(cpath)
 
-        if not line:
+        if line:
+            line = line.strip().split(':', 1)[0] 
+        else:
             return -1
 
         return int(line)
@@ -119,7 +127,6 @@ class VpnFile(object):
     def get_file_line_idx(self, text):
         """ 
         Get the line number in the file
-        @file: target file 
         @text: content
         @return: line number or -1 
         """
@@ -134,9 +141,9 @@ class VpnFile(object):
     def vpn_line_update_re(self, old, new, count = 1):
         """ 
         Replace the old with new string in the file
-        @path: target file
         @old: old string regular
         @new: new string 
+        @count: replace times
         """
         #if not os.path.isfile(self._path):
         #    return False
@@ -151,3 +158,42 @@ class VpnFile(object):
         tar_file = open(self._path, 'w')
         tar_file.write(tar_new)
         tar_file.close()
+
+    def vpn_delete_line(self, str):
+        """
+        Delete a line including the key string in the file
+        @str: key string
+        """
+        tar_file = open(self._path, 'r')
+        lines = tar_file.readlines()
+        tar_file.close()
+
+        res = []
+        tar_file = open(self._path + ".bak", 'w')
+        for line in lines:
+            if str not in line:
+                tar_file.write(line)
+            else:
+                res.append(line)
+        tar_file.close()
+
+        shutil.copyfile(self._path + ".bak", self._path)
+
+        return res
+
+    def vpn_get_line(self, str):
+        """
+        Get a line string including the key string in the file
+        @str: key string
+        """
+        tar_file = open(self._path, 'r')
+        lines = tar_file.readlines()
+        tar_file.close()
+
+        for line in lines:
+            if str in line:
+                return line
+
+        return ""
+
+        

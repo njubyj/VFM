@@ -3,11 +3,13 @@
 __author = 'yjbao'
 
 import unittest
+import shutil
 import sys
 sys.path.append(".")
 from Deploy.vpn_xml import VpnXml
 import Deploy.vpn_global_var as G
 from Test import test_vars as T
+#import xml.etree.ElementTree as ET
 
 class TestXML(unittest.TestCase):
     """
@@ -16,16 +18,6 @@ class TestXML(unittest.TestCase):
 
     def setUp(self):
         pass
-    #def test_get_guide_path(self):
-    #    """
-    #    Test: VpnXML.get_guide_path
-    #    """
-    #    g_path = self.__xml.get_guide_path()
-    #    self.assertEqual(g_path, T.xml_guide_path)
-
-    #def test_get_vpn_dir(self):
-    #    v_dir = self.__xml.get_vpn_dir()
-    #    self.assertEqual(v_dir, T.xml_vpn_dir)
 
     def test_get(self):
         self.__xml = VpnXml(T.xml_common_path)
@@ -45,6 +37,7 @@ class TestXML(unittest.TestCase):
         self.assertFalse(f)
 
     def test_add_del(self):
+        shutil.copyfile(T.xml_bak_path, T.xml_ad_path)
         self.__xml = VpnXml(T.xml_ad_path)
         self.__xml.xml_add_usr(T.xml_usr_list[0], "1", T.xmlt_usr_dir)
         tcnt = self.__xml.get_user_cnt()

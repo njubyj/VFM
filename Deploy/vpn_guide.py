@@ -56,71 +56,71 @@ class VpnGuideParser(object):
         for op in ops:
             if (op == VpnTag.OPT_TASK) and \
                (self.__conf.get(sec,op)):
-                val_dic[op] = self.__conf.get(sec, op)
+                val_dic[op] = self.__conf.get(sec, op).strip()
                 continue
             if (op == VpnTag.OPT_NAME) and \
                (self.__conf.get(sec,op)):
-                val_dic[op] = self.__conf.get(sec, op)
+                val_dic[op] = self.__conf.get(sec, op).strip()
                 continue
             if (op == VpnTag.TAG_PORT) and \
                (self.__conf.get(sec, op)):
-                val_dic[op] = self.__conf.get(sec, op)
+                val_dic[op] = self.__conf.get(sec, op).strip()
                 continue
             if (op == VpnTag.TAG_PROTO) and \
                (self.__conf.get(sec, op)):
-                val_dic[op] = self.__conf.get(sec, op)
+                val_dic[op] = self.__conf.get(sec, op).strip()
                 continue
             if (op == VpnTag.TAG_DEV) and \
                (self.__conf.get(sec, op)):
-                val_dic[op] = self.__conf.get(sec, op)
+                val_dic[op] = self.__conf.get(sec, op).strip()
                 continue
             if (op == VpnTag.TAG_CA) and \
                (self.__conf.get(sec, op)):
-                val_dic[op] = self.__conf.get(sec, op)
+                val_dic[op] = self.__conf.get(sec, op).strip()
                 continue
             if (op == VpnTag.TAG_CERT) and \
                (self.__conf.get(sec, op)):
-                val_dic[op] = self.__conf.get(sec, op)
+                val_dic[op] = self.__conf.get(sec, op).strip()
                 continue
             if (op == VpnTag.TAG_KEY) and \
                (self.__conf.get(sec, op)):
-                val_dic[op] = self.__conf.get(sec, op)
+                val_dic[op] = self.__conf.get(sec, op).strip()
                 continue
             if (op == VpnTag.TAG_DH) and \
                (self.__conf.get(sec, op)):
-                val_dic[op] = self.__conf.get(sec, op)
+                val_dic[op] = self.__conf.get(sec, op).strip()
                 continue
             if (op == VpnTag.TAG_SERVER) and \
                (self.__conf.get(sec, op)):
-                val_dic[op] = self.__conf.get(sec, op)
+                val_dic[op] = self.__conf.get(sec, op).strip()
                 continue
             if (op == VpnTag.TAG_IPPOOL) and \
                (self.__conf.get(sec, op)):
-                val_dic[op] = self.__conf.get(sec, op)
+                val_dic[op] = self.__conf.get(sec, op).strip()
                 continue
             if (op == VpnTag.TAG_C2C) and \
                (self.__conf.get(sec, op)):
-                val_dic[op] = self.__conf.get(sec, op)
+                val_dic[op] = self.__conf.get(sec, op).strip()
                 continue
             if (op == VpnTag.TAG_KALIVE) and \
                (self.__conf.get(sec, op)):
-                val_dic[op] = self.__conf.get(sec, op)
+                val_dic[op] = self.__conf.get(sec, op).strip()
                 continue
             if (op == VpnTag.TAG_TLS) and \
                (self.__conf.get(sec, op)):
-                val_dic[op] = self.__conf.get(sec, op)
+                val_dic[op] = self.__conf.get(sec, op).strip()
                 continue
             if (op == VpnTag.TAG_MAXC) and \
                (self.__conf.get(sec, op)):
-                val_dic[op] = self.__conf.get(sec, op)
+                val_dic[op] = self.__conf.get(sec, op).strip()
                 continue
             if (op == VpnTag.TAG_STATUS) and \
                (self.__conf.get(sec, op)):
-                val_dic[op] = self.__conf.get(sec, op)
+                val_dic[op] = self.__conf.get(sec, op).strip()
                 continue
             if (op == VpnTag.TAG_LOG) and \
                (self.__conf.get(sec, op)):
-                val_dic[op] = self.__conf.get(sec, op)
+                val_dic[op] = self.__conf.get(sec, op).strip()
                 continue
 
         return (usr, val_dic)
@@ -141,11 +141,11 @@ class VpnGuideParser(object):
         for op in ops:
             if (op == VpnTag.OPT_TASK) and \
                (self.__conf.get(sec,op)):
-                val_dic[op] = self.__conf.get(sec, op)
+                val_dic[op] = self.__conf.get(sec, op).strip()
                 continue
             if (op == VpnTag.OPT_NAME) and \
                (self.__conf.get(sec,op)):
-                val_dic[op] = self.__conf.get(sec, op)
+                val_dic[op] = self.__conf.get(sec, op).strip()
                 continue
 
         return (usr, val_dic)

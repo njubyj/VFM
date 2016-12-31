@@ -73,6 +73,115 @@ class VpnXml(object):
             scnt.text = "0"
             self.__root.append(scnt)
 
+    def __get_usr(self, usr, root):
+        ptn = self.__TAG_USER + "[@" + self.__ATTR_N + '="' + usr + '"]'
+        return root.find(ptn)
+
+    def __get_server(self, usr, sev, root):
+        usr_ele = self.__get_usr(usr, root)
+        if usr_ele is None:
+            return None
+        ptn = self.__TAG_SERVER + "[@" + self.__ATTR_N + '="' + sev + '"]'
+        return usr_ele.find(ptn)
+
+    def __get_sev_op(self, usr, sev, tag, root):
+        sev_ele = self.__get_server(usr, sev, root)
+        if sev_ele:
+            port = sev_ele.findtext(tag)   
+            if port is not None:
+                return port
+        return ""
+
+    def __get_sev_ops(self, tag, root):
+        ops = []
+        for usr in root.findall(self.__TAG_USER):
+            for sev in usr.findall(self.__TAG_SERVER):
+                op = sev.findtext(tag)
+                if op is not None:
+                    ops.append(op)
+
+        return ops 
+
+    def __pack_value(self, tag, attr):
+        val = ""
+        if ('#' in attr) or (';' in attr):
+            return val
+
+        val = attr
+
+        if tag == VTAG.TAG_C2C:
+            if attr == '1':
+                val = '1'
+            else:
+                val = '0'
+        elif tag == VTAG.TAG_CA or \
+             tag == VTAG.TAG_CERT or \
+             tag == VTAG.TAG_KEY or \
+             tag == VTAG.TAG_DH or \
+             tag == VTAG.TAG_TLS or \
+             tag == VTAG.TAG_LOG or \
+             tag == VTAG.TAG_IPPOOL or \
+             tag == VTAG.TAG_STATUS:
+            val = attr.rsplit('/', 1)[1]
+
+        return val
+
+    def get_port(self, usr, sev):
+        """
+        Get the port of server
+        @usr: user name
+        @server: server name
+        """
+        root = self.__xml_parse()
+        return self.__get_sev_op(usr, sev, self.__TAG_PORT, root)
+
+    def get_dev(self, usr, sev):
+        """
+        Get the device of server
+        @usr: user name
+        @server: server name
+        """
+        root = self.__xml_parse()
+        return self.__get_sev_op(usr, sev, self.__TAG_DEV, root)
+
+    def get_ip(self, usr, sev):
+        """
+        Get the ip range of server
+        @usr: user name
+        @server: server name
+        """
+        root = self.__xml_parse()
+        return self.__get_sev_op(usr, sev, self.__TAG_IPS, root)
+
+    def get_ports(self):
+        """
+        Get the list of ports which have been used
+        """
+        root = self.__xml_parse()
+        return self.__get_sev_ops(self.__TAG_PORT, root)
+
+    def get_devs(self):
+        """
+        Get the list of devices which have been used
+        """
+        root = self.__xml_parse()
+        return self.__get_sev_ops(self.__TAG_DEV, root)
+
+    def get_ips(self):
+        """
+        Get the list of ip addresses which have been used
+        """
+        root = self.__xml_parse()
+        ips = []
+        for usr in root.findall(self.__TAG_USER):
+            for sev in usr.findall(self.__TAG_SERVER):
+                ip = sev.findtext(self.__TAG_IPS)
+                mask = sev.findtext(self.__TAG_MASK)
+                if (ip is not None) and (mask is not None):
+                    ips.append((ip, mask))
+
+        return ips 
+
     def xml_create(self):
         """
         Create a new xml file
@@ -95,10 +204,6 @@ class VpnXml(object):
         Get the number of server
         """
         return int(self.__xml_parse().findtext(self.__TAG_SEVCNT))
-
-    def __get_usr(self, usr, root):
-        ptn = self.__TAG_USER + "[@" + self.__ATTR_N + '="' + usr + '"]'
-        return root.find(ptn)
 
     def is_usr_exist(self, usr):
         """
@@ -198,30 +303,6 @@ class VpnXml(object):
             return True
         else:
             return False
-
-    def __pack_value(self, tag, attr):
-        val = ""
-        if ('#' in attr) or (';' in attr):
-            return val
-
-        val = attr
-
-        if tag == VTAG.TAG_C2C:
-            if attr == '1':
-                val = '1'
-            else:
-                val = '0'
-        elif tag == VTAG.TAG_CA or \
-             tag == VTAG.TAG_CERT or \
-             tag == VTAG.TAG_KEY or \
-             tag == VTAG.TAG_DH or \
-             tag == VTAG.TAG_TLS or \
-             tag == VTAG.TAG_LOG or \
-             tag == VTAG.TAG_IPPOOL or \
-             tag == VTAG.TAG_STATUS:
-            val = attr.rsplit('/', 1)[1]
-
-        return val
 
     def xml_add_server(self, usr, name, conf):
         """
